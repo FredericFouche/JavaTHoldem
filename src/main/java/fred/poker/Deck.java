@@ -1,15 +1,16 @@
 package fred.poker;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Deck {
     // Un Deck a 52 cartes uniques
     // Créer une List pour stocker les cartes du Deck
-    List<Card> cards;
+    List<Card> deck;
 
     public Deck() {
-        this.cards = getFullDeck();
+        this.deck = getFullDeck();
     }
 
     public List<Card> getFullDeck() {
@@ -30,6 +31,22 @@ public class Deck {
         }
 
         return fullDeck;
+    }
+
+    public List<Card> draw(byte number) {
+        if (number > deck.size()) {
+            throw new IllegalArgumentException("Insufficient deck in deck to draw.");
+        } else {
+            // Récupérer les cartes de l'array de l'index 0 à number
+            List<Card> drawnDeck = new ArrayList<>(deck.subList(0,number));
+            // Soustraire les cartes de l'array 
+            deck = new ArrayList<>(deck.subList(number, deck.size()));
+            return drawnDeck;
+        }
+    }
+
+    public void shuffle() {
+        Collections.shuffle(deck);
     }
 
 }
