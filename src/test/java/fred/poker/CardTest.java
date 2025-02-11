@@ -1,4 +1,5 @@
-import fred.poker.Card;
+package fred.poker;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
