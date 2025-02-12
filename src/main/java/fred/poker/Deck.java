@@ -19,11 +19,7 @@ public class Deck {
 
         for (String type : types) {
             for (byte value : values) {
-                if (type.contains("DIAMONDS") || type.contains("HEARTS")) {
-                    fullDeck.add(new Card (value, "RED", type));
-                } else {
-                    fullDeck.add(new Card (value, "BLACK", type));
-                }
+                    fullDeck.add(new Card (value, type));
             }
         }
 

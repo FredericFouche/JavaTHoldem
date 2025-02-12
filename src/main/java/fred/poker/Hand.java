@@ -24,6 +24,20 @@ public class Hand implements Consumer<String> {
         }
     }
 
+    /**
+     * Encode la main en un tableau d'entiers
+     * Permet de représenter une main par un entier
+     *
+     * @return int representation de la main
+     */
+    public int[] getEncodedHand() {
+        int[] encodedHand = new int[2];
+        for (int i = 0; i < hand.size(); i++) {
+            encodedHand[i] = hand.get(i).encodeCardValue();
+        }
+        return encodedHand;
+    }
+
     public void addCardToHand(byte number) {
         if (hand.size() < 2) {
             List<Card> drawnHand = deck.draw(number);

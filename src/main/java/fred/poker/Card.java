@@ -5,65 +5,65 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Card {
-    // Une carte a une valeur
-    // Une carte a une couleur
-    // Une carte est soit un carreau/spades/etc
+    private static final Set<String> VALID_TYPES = new HashSet<>(Arrays.asList("DIAMONDS", "SPADES", "CLUBS", "HEARTS"));
+
     private byte cardValue;
-    private String cardColor;
     private String cardType;
 
 
-    public Card(byte cardValue, String cardColor, String cardType) {
-        this.cardValue = cardValue;
-        this.cardColor = cardColor;
-        this.cardType = cardType;
+    public Card(byte cardValue, String cardType) {
+        setCardValue(cardValue);
+        setCardType(cardType);
     }
 
     public byte getCardValue() {
-        if (cardValue < 0) {
-            throw new IllegalArgumentException("Value must be > 0");
-        }
-
-        if (cardValue > 14) {
-            throw new IllegalArgumentException("Value must be < 14");
-        }
         return cardValue;
     }
 
     public void setCardValue(byte cardValue) {
-        this.cardValue = cardValue;
-    }
-
-    public String getCardColor() {
-        if(cardColor.equals("RED") || cardColor.equals("BLACK")) {
-            return cardColor;
-        } else if (cardColor.equalsIgnoreCase("RED") || cardColor.equalsIgnoreCase("BLACK")) {
-            throw new IllegalArgumentException("Case Sensitive.");
+        if (cardValue < 2 || cardValue > 14) {
+            throw new IllegalArgumentException("Value must be between 2 and 14");
         }
-        else {
-            throw new IllegalArgumentException("Color must be BLACK or RED.");
-        }
-    }
-
-    public void setCardColor(String cardColor) {
-        this.cardColor = cardColor;
     }
 
     public String getCardType() {
-        Set<String> validValues = new HashSet<>(Arrays.asList("DIAMONDS", "SPADES", "CLUBS", "HEARTS"));
-
-        if(validValues.contains(cardType)) {
-            return cardType;
-        } else {
-            throw new IllegalArgumentException("fred.poker.Card type must be \"DIAMONDS\", \"SPADES\", \"CLUBS\", \"HEARTS\". Case sensitive.");
-        }
+        return cardType;
     }
 
     public void setCardType(String cardType) {
+        if(!VALID_TYPES.contains(cardType)) {
+            throw new IllegalArgumentException("fred.poker.Card type must be \"DIAMONDS\", \"SPADES\", \"CLUBS\", \"HEARTS\". Case sensitive.");
+        }
         this.cardType = cardType;
     }
 
     public String getCard() {
-        return cardValue + " " + cardColor + " " + cardType;
+        return cardValue + " " + cardType;
+    }
+
+    /**
+     * Encode card to a 32-bit integer.
+     * Permet de représenter une carte par un entier
+     *
+     * @return int representation de la carte
+     */
+    public int encodeCardValue() {
+        int value = 0;
+        switch (cardType) {
+            case "DIAMONDS":
+                break;
+            case "SPADES":
+                value = 1;
+                break;
+            case "CLUBS":
+                value = 2;
+                break;
+            case "HEARTS":
+                value = 3;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid card type");
+        }
+        return (cardValue - 2) * 4 + value;
     }
 }
