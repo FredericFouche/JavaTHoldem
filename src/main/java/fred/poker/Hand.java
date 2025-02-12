@@ -46,8 +46,4 @@ public class Hand implements Consumer<String> {
             addCardToHand((byte) 2);
         }
     }
-
-    public void subscribe(Game game) {
-        game.subscribe(this);
-    }
 }

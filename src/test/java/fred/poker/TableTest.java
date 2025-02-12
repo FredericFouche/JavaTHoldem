@@ -15,7 +15,7 @@ class TableTest {
     @BeforeEach
     void setUp() {
         deck = new Deck();
-        table = new Table(deck);
+        table = new Table(deck, new EventManager());
     }
 
     @Test

@@ -4,13 +4,37 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class Table implements Consumer<String> {
+public class Table implements Consumer<EventManager.EventType> {
     List<Card> communityCards;
     Deck deck;
+    private enum HandleEvent {
+        DEAL_FLOP,
+        DEAL_TURN,
+        DEAL_RIVER,
+        END_GAME
+    }
 
-    public Table(Deck deck) {
+    public Table(Deck deck, EventManager eventManager) {
         this.communityCards = new ArrayList<>();
         this.deck = deck;
+        for (HandleEvent event : HandleEvent.values()) {
+            eventManager.subscribe(EventManager.EventType.valueOf(event.toString()), this);
+        }
+    }
+
+    @Override
+    public void accept(EventManager.EventType eventType) {
+        if (eventType == EventManager.EventType.DEAL_FLOP) {
+            dealFlop();
+        } else if (eventType == EventManager.EventType.DEAL_TURN) {
+            dealTurn();
+        } else if (eventType == EventManager.EventType.DEAL_RIVER) {
+            dealRiver();
+        } else if (eventType == EventManager.EventType.END_GAME) {
+            endGame();
+        } else {
+            throw new IllegalArgumentException("Invalid event type");
+        }
     }
 
     public List<Card> getCommunityCards() {
@@ -51,26 +75,6 @@ public class Table implements Consumer<String> {
     public void endGame() {
         wipeTable();
         System.out.println("Game ended");
-    }
-
-    @Override
-    public void accept(String s) {
-        switch (s) {
-            case "DEAL_FLOP":
-                dealFlop();
-                break;
-            case "DEAL_TURN":
-                dealTurn();
-                break;
-            case "DEAL_RIVER":
-                dealRiver();
-                break;
-            case "END_GAME":
-                endGame();
-                break;
-            default:
-                throw new IllegalArgumentException("Unknown event");
-        }
     }
 }
 
