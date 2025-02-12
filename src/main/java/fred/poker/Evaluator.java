@@ -24,7 +24,9 @@ public class Evaluator {
 
         Arrays.sort(values);
 
-        if (isStraightFlush(values, suits)) {
+        if (isStraightFlushRoyal(values, suits)) {
+            return 10;
+        } else if (isStraightFlush(values, suits)) {
             return 9;
         } else if (isFourOfAKind(values)) {
             return 8;
@@ -43,13 +45,14 @@ public class Evaluator {
         } else {
             return 1;
         }
+
     }
 
-    private static boolean isOnePair(int[] values) {
+    static boolean isOnePair(int[] values) {
         return Arrays.stream(values).distinct().count() == 4;
     }
 
-    private static boolean isTwoPair(int[] values) {
+    static boolean isTwoPair(int[] values) {
         int[] counts = new int[13];
         for (int value : values) {
             counts[value]++;
@@ -63,7 +66,7 @@ public class Evaluator {
         return pairCount == 2;
     }
 
-    private static boolean isThreeOfAKind(int[] values) {
+    static boolean isThreeOfAKind(int[] values) {
         int[] counts = new int[13];
         for (int value : values) {
             counts[value]++;
@@ -76,8 +79,7 @@ public class Evaluator {
         return false;
     }
 
-    private static boolean isStraight(int[] values) {
-        Arrays.sort(values);
+    static boolean isStraight(int[] values) {
         int intervalCount = 0;
         for (int i = 0; i < (values.length - 1) ; i++) {
             if ((values[i] - values[i + 1]) == -1) {
@@ -92,17 +94,52 @@ public class Evaluator {
         return false;
     }
 
-    private static boolean isFlush(int[] suits) {
+    static boolean isFlush(int[] suits) {
         return Arrays.stream(suits).distinct().count() == 1;
     }
 
-    private static boolean isFullHouse(int[] values) {
+    static boolean isFullHouse(int[] values) {
+        int[] counts = new int[13];
+        if (Arrays.stream(values).distinct().count() == 2) {
+            for (int value : values) {
+                counts[value]++;
+            }
+            for (int count : counts) {
+                if (count == 3) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return false;
     }
 
-    private static boolean isFourOfAKind(int[] values) {
+    static boolean isFourOfAKind(int[] values) {
+        int[] counts = new int[13];
+        if (Arrays.stream(values).distinct().count() == 2) {
+            for (int value : values) {
+                counts[value]++;
+            }
+            for (int count : counts) {
+                if (count == 4) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return false;
     }
 
-    private static boolean isStraightFlush(int[] values, int[] suits) {
+    static boolean isStraightFlush(int[] values, int[] suits) {
+        return (isStraight(values) && isFlush(suits));
+    }
+
+    static boolean isStraightFlushRoyal(int[] values, int[] suits) {
+        if (values[0] == 1) {
+            values[0] = 14;
+            Arrays.sort(values);
+        }
+        return (isStraight(values) && isFlush(suits) && values[0] == 10);
     }
 
     private static int findBestHand(int[] allCards) {
