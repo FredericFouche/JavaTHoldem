@@ -103,7 +103,7 @@ class EvaluatorTest {
 
     @Test
     void isStraightFlushRoyal_returnsTrue_forRoyalFlush() {
-        int[] royalFlushHand = {1, 10, 11, 12, 13}; // Royal flush
+        int[] royalFlushHand = {0, 9, 10, 11, 12}; // Royal flush
         assertTrue(Evaluator.isStraightFlushRoyal(royalFlushHand, new int[]{0, 0, 0, 0, 0}));
     }
 
@@ -112,4 +112,65 @@ class EvaluatorTest {
         int[] straightFlushHand = {0, 1, 2, 3, 4}; // Straight flush
         assertFalse(Evaluator.isStraightFlushRoyal(straightFlushHand, new int[]{0, 0, 0, 0, 0}));
     }
+
+    @Test
+    void evaluateHand_returnsTen_forStraightFlushRoyal() {
+        int[] royalFlushHand = {0, 9, 10, 11, 12};
+        assertEquals(10, Evaluator.evaluateHand(royalFlushHand));
+    }
+
+    @Test
+    void evaluateHand_returnsNine_forStraightFlush() {
+        int[] straightFlushHand = {1, 2, 3, 4, 5};
+        assertEquals(9, Evaluator.evaluateHand(straightFlushHand));
+    }
+
+    @Test
+    void evaluateHand_returnsEight_forFourOfAKind() {
+        int[] fourOfAKindHand = {1, 1, 1, 1, 2};
+        assertEquals(8, Evaluator.evaluateHand(fourOfAKindHand));
+    }
+
+    @Test
+    void evaluateHand_returnsSeven_forFullHouse() {
+        int[] fullHouseHand = {1, 1, 1, 2, 2};
+        assertEquals(7, Evaluator.evaluateHand(fullHouseHand));
+    }
+
+    @Test
+    void evaluateHand_returnsSix_forFlush() {
+        int[] flushHand = {1, 1, 1, 1, 1};
+        assertEquals(6, Evaluator.evaluateHand(flushHand));
+    }
+
+    @Test
+    void evaluateHand_returnsFive_forStraight() {
+        int[] straightHand = {18, 6, 7, 8, 9};
+        assertEquals(5, Evaluator.evaluateHand(straightHand));
+    }
+
+    @Test
+    void evaluateHand_returnsFour_forThreeOfAKind() {
+        int[] threeOfAKindHand = {0, 26, 39, 50, 51};
+        assertEquals(4, Evaluator.evaluateHand(threeOfAKindHand));
+    }
+
+    @Test
+    void evaluateHand_returnsThree_forTwoPair() {
+        int[] twoPairHand = {0, 26, 5, 1, 27};
+        assertEquals(3, Evaluator.evaluateHand(twoPairHand));
+    }
+
+    @Test
+    void evaluateHand_returnsTwo_forOnePair() {
+        int[] onePairHand = {0, 26, 5, 4, 27};
+        assertEquals(2, Evaluator.evaluateHand(onePairHand));
+    }
+
+    @Test
+    void evaluateHand_returnsOne_forHighCard() {
+        int[] highCardHand = {0, 3, 6, 34, 50};
+        assertEquals(1, Evaluator.evaluateHand(highCardHand));
+    }
+
 }

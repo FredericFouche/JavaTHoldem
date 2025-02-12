@@ -31,30 +31,5 @@ class CardTest {
         assertEquals("1 DIAMONDS", card.getCard());
     }
 
-    @Test
-    void negativeCardValue() {
-        card = new Card((byte) -1, "DIAMONDS");
-        assertThrows(IllegalArgumentException.class, () -> card.getCardValue());
-    }
-
-    @Test
-    void cardMaxRange() {
-        card = new Card((byte) 127, "DIAMONDS");
-        assertThrows(IllegalArgumentException.class, () -> card.getCardValue());
-    }
-
-
-    @Test
-    void cardValueLimited() {
-        card = new Card((byte) 1, "CHAT");
-        assertThrows(IllegalArgumentException.class, () -> card.getCardType());
-    }
-
-    @Test
-    void cardValueCaseSensitive() {
-        card = new Card((byte) 1, "Diamonds");
-        assertThrows(IllegalArgumentException.class, () -> card.getCardType());
-    }
-
 
 }

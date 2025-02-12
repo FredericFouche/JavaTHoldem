@@ -17,12 +17,15 @@ public class Evaluator {
 
         for (int i = 0; i < 5; i++) {
             // Utilisation du modulo pour déchiffrer la valeur de la carte ex : 14 % 13 = 1 => As
-            values[i] = hand[i] % 13;
+            values[i] = (hand[i] % 13 == 0) ? 13 : hand[i] % 13;
             // Utilisation de la division entière pour déchiffrer la couleur de la carte ex : 14 / 13 = 1 => Pique
-            suits[i] = hand[i] / 13;
+            suits[i] = (hand[i] - 1) / 13;
         }
 
         Arrays.sort(values);
+
+        System.out.println("values: " + Arrays.toString(values));
+        System.out.println("suits: " + Arrays.toString(suits));
 
         if (isStraightFlushRoyal(values, suits)) {
             return 10;
@@ -41,8 +44,10 @@ public class Evaluator {
         } else if (isTwoPair(values)) {
             return 3;
         } else if (isOnePair(values)) {
+            System.out.println("isOnePair" + Arrays.toString(values));
             return 2;
         } else {
+            System.out.println("isHighCard" + Arrays.toString(values) + Arrays.toString(suits));
             return 1;
         }
 
@@ -55,7 +60,7 @@ public class Evaluator {
     static boolean isTwoPair(int[] values) {
         int[] counts = new int[13];
         for (int value : values) {
-            counts[value]++;
+            counts[value - 1]++;
         }
         int pairCount = 0;
         for (int count : counts) {
@@ -69,7 +74,7 @@ public class Evaluator {
     static boolean isThreeOfAKind(int[] values) {
         int[] counts = new int[13];
         for (int value : values) {
-            counts[value]++;
+            counts[value - 1]++;
         }
         for (int count : counts) {
             if (count == 3) {
@@ -80,15 +85,17 @@ public class Evaluator {
     }
 
     static boolean isStraight(int[] values) {
-        int intervalCount = 0;
+        Arrays.sort(values);
+
+        int intervalCount = 1;
         for (int i = 0; i < (values.length - 1) ; i++) {
-            if ((values[i] - values[i + 1]) == -1) {
+            if ((values[i + 1] - values[i]) == 1) {
                 intervalCount++;
+                if (intervalCount == 5) {
+                    return true;
+                }
             } else {
-                break;
-            }
-            if (intervalCount == 4) {
-                return true;
+                intervalCount = 1;
             }
         }
         return false;
@@ -99,6 +106,8 @@ public class Evaluator {
     }
 
     static boolean isFullHouse(int[] values) {
+        Arrays.sort(values);
+
         int[] counts = new int[13];
         if (Arrays.stream(values).distinct().count() == 2) {
             for (int value : values) {
@@ -131,15 +140,15 @@ public class Evaluator {
     }
 
     static boolean isStraightFlush(int[] values, int[] suits) {
-        return (isStraight(values) && isFlush(suits));
+        return isStraight(values) && isFlush(suits);
     }
 
     static boolean isStraightFlushRoyal(int[] values, int[] suits) {
-        if (values[0] == 1) {
-            values[0] = 14;
+        if (values[4] == 12 && values[0] == 0) {
+            values[0] = 13;
             Arrays.sort(values);
         }
-        return (isStraight(values) && isFlush(suits) && values[0] == 10);
+        return (isStraight(values) && isFlush(suits) && values[0] == 9);
     }
 
     private static int findBestHand(int[] allCards) {

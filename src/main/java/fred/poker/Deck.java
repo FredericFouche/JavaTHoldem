@@ -14,7 +14,7 @@ public class Deck {
     public List<Card> getFullDeck() {
         List<Card> fullDeck = new ArrayList<>();
 
-        byte[] values = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ,13};
+        byte[] values = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
         String[] types = {"DIAMONDS", "SPADES", "CLUBS", "HEARTS"};
 
         for (String type : types) {

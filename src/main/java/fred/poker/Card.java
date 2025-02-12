@@ -7,9 +7,8 @@ import java.util.Set;
 public class Card {
     private static final Set<String> VALID_TYPES = new HashSet<>(Arrays.asList("DIAMONDS", "SPADES", "CLUBS", "HEARTS"));
 
-    private byte cardValue;
+    private byte cardValue; // Utiliser des valeurs de 0 à 12
     private String cardType;
-
 
     public Card(byte cardValue, String cardType) {
         setCardValue(cardValue);
@@ -21,9 +20,10 @@ public class Card {
     }
 
     public void setCardValue(byte cardValue) {
-        if (cardValue < 2 || cardValue > 14) {
-            throw new IllegalArgumentException("Value must be between 2 and 14");
+        if (cardValue < 0 || cardValue > 12) {
+            throw new IllegalArgumentException("Value must be between 0 and 12");
         }
+        this.cardValue = cardValue;
     }
 
     public String getCardType() {
@@ -31,8 +31,8 @@ public class Card {
     }
 
     public void setCardType(String cardType) {
-        if(!VALID_TYPES.contains(cardType)) {
-            throw new IllegalArgumentException("fred.poker.Card type must be \"DIAMONDS\", \"SPADES\", \"CLUBS\", \"HEARTS\". Case sensitive.");
+        if (!VALID_TYPES.contains(cardType)) {
+            throw new IllegalArgumentException("Card type must be \"DIAMONDS\", \"SPADES\", \"CLUBS\", \"HEARTS\". Case sensitive.");
         }
         this.cardType = cardType;
     }
@@ -64,6 +64,6 @@ public class Card {
             default:
                 throw new IllegalArgumentException("Invalid card type");
         }
-        return (cardValue - 2) * 4 + value;
+        return (cardValue + (13 * value));
     }
 }
