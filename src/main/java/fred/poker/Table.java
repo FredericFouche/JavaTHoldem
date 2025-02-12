@@ -41,19 +41,6 @@ public class Table implements Consumer<EventManager.EventType> {
         return communityCards;
     }
 
-    /**
-     * Encode les cartes communautaires en un tableau d'entiers
-     *
-     * @return int representation de la main
-     */
-    public int[] getEncodedCommunityCards() {
-        int[] encodedHand = new int[communityCards.size()];
-        for (int i = 0; i < communityCards.size(); i++) {
-            encodedHand[i] = communityCards.get(i).encodeCardValue();
-        }
-        return encodedHand;
-    }
-
     public void dealFlop() {
         if (!communityCards.isEmpty()) {
             throw new IllegalArgumentException("Flop has already been drawn");

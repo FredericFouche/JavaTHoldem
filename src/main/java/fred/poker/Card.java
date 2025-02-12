@@ -7,8 +7,12 @@ import java.util.Set;
 public class Card {
     private static final Set<String> VALID_TYPES = new HashSet<>(Arrays.asList("DIAMONDS", "SPADES", "CLUBS", "HEARTS"));
 
-    private byte cardValue; // Utiliser des valeurs de 0 à 12
+    private byte cardValue;
     private String cardType;
+
+    static byte[] VALUES = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+    static String[] TYPES = {"DIAMONDS", "SPADES", "CLUBS", "HEARTS"};
+    static byte[] PRIMES = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41};
 
     public Card(byte cardValue, String cardType) {
         setCardValue(cardValue);
