@@ -14,9 +14,8 @@ public class Lookup {
     public static final int MAX_THREE_OF_A_KIND  = 2467;
     public static final int MAX_TWO_PAIR         = 3325;
     public static final int MAX_PAIR             = 6185;
-    public static final int MAX_HIGH_CARD        = 7462;
 
-    public lookUpTable() {
+    public void lookUpTable() {
         buildFlushes();
         buildMultiples();
     }
@@ -53,6 +52,8 @@ public class Lookup {
             rank++;
         }
 
+        System.out.println("straight flushes: " + flushLookup.size());
+
         // Genere toutes les combinaisons de 5 cartes parmi 13
         List<Integer> allCombinationsFlush = generateAllCombinations(13, 5);
         Set<Integer> straightFlushSet = new HashSet<>();
@@ -70,6 +71,8 @@ public class Lookup {
             }
         }
 
+        System.out.println(flushCombinations.size() + " flush combinations"); // 1277
+
         flushCombinations.sort(Collections.reverseOrder());
 
         /*
@@ -84,8 +87,9 @@ public class Lookup {
             rank++;
         }
 
-        addStraightHighCards(straightFlushes, flushCombinations);
+        System.out.println(flushLookup.size() + " flushes"); // 1287
 
+        addStraightHighCards(straightFlushes, flushCombinations);
     }
 
     private void addStraightHighCards(int[] straightFlushes, List<Integer> flushCombinations) {
@@ -102,6 +106,7 @@ public class Lookup {
             unsuitedLookup.put(primeProduct, rank);
             rank++;
         }
+
     }
 
     // ----------------------------------------------------------------------
@@ -175,6 +180,8 @@ public class Lookup {
             }
         }
 
+        System.out.println("unsuited: " + unsuitedLookup.size());
+
     }
 
     // ----------------------------------------------------------------------
@@ -186,7 +193,7 @@ public class Lookup {
         return result;
     }
 
-    private long primeProductFromRankBits(int rankBits) {
+    long primeProductFromRankBits(int rankBits) {
         long product = 1;
         for (int i = 0; i < 13; i++) {
             if ((rankBits & (1 << i)) != 0) {
@@ -212,4 +219,14 @@ public class Lookup {
         }
         return combinations;
     }
+
+    public Collection<Integer> getFlushLookup() {
+        System.out.println(flushLookup);
+        return flushLookup.values();
+    }
+
+    public Collection<Integer> getUnsuitedLookup() {
+        return unsuitedLookup.values();
+    }
+
 }
