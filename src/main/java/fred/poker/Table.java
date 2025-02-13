@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class Table implements Consumer<EventManager.EventType> {
-    List<Card> communityCards;
-    Deck deck;
+    static List<Card> communityCards;
+    static Deck deck;
     private enum HandleEvent {
         DEAL_FLOP,
         DEAL_TURN,
@@ -41,7 +41,7 @@ public class Table implements Consumer<EventManager.EventType> {
         return communityCards;
     }
 
-    public void dealFlop() {
+    public static void dealFlop() {
         if (!communityCards.isEmpty()) {
             throw new IllegalArgumentException("Flop has already been drawn");
         } else {
@@ -52,7 +52,7 @@ public class Table implements Consumer<EventManager.EventType> {
         }
     }
 
-    public void dealTurn() {
+    public static void dealTurn() {
         if (communityCards.size() == 3) {
             Card flopDrawn = deck.draw();
             communityCards.add(flopDrawn);
@@ -61,7 +61,7 @@ public class Table implements Consumer<EventManager.EventType> {
         }
     }
 
-    public void dealRiver() {
+    public static void dealRiver() {
         if (communityCards.size() == 4) {
             Card flopDrawn = deck.draw();
             communityCards.add(flopDrawn);

@@ -11,7 +11,7 @@ public class Card {
     private String cardSuit;
 
     static int[] VALUES = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-    static String[] SUITS = {"DIAMONDS", "SPADES", "CLUBS", "HEARTS"};
+    static String[] SUITS = {"CLUBS" ,"DIAMONDS", "SPADES", "HEARTS"};
     static int[] PRIMES = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41};
 
     public Card(int cardValue, String cardSuit) {
@@ -68,16 +68,16 @@ public class Card {
     public static int convertToCactusKev(Card c) {
         int suitVal;
         switch (c.getCardSuit()) {
-            case "DIAMONDS":
+            case "CLUBS":
                 suitVal = 0;
                 break;
-            case "SPADES":
+            case "DIAMONDS":
                 suitVal = 1;
                 break;
-            case "CLUBS":
+            case "HEARTS":
                 suitVal = 2;
                 break;
-            case "HEARTS":
+            case "SPADES":
                 suitVal = 3;
                 break;
             default:
@@ -85,9 +85,7 @@ public class Card {
         }
 
         int rankVal = c.getCardValue();
-
         int primeCard = PRIMES[rankVal];
-
         int rankBit = 1 << (16 + rankVal);
 
         // Magie noire qui permet de construire un entier à partir des valeurs de la carte
@@ -95,7 +93,6 @@ public class Card {
         // Bits 8-11 : rank de la carte
         // Bits 12-15 : suit de la carte
         // Bits 16-rank = 1
-        System.out.println(rankBit | primeCard | (rankVal << 8) | (suitVal << 12));
         return rankBit | primeCard | (rankVal << 8) | (suitVal << 12);
     }
 }

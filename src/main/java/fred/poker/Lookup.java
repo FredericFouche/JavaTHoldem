@@ -208,7 +208,7 @@ public class Lookup {
     // Chaque combinaison est représentée par un entier dont les bits à 1 indiquent les rangs valides
     // Globalement de la magie noire.
     // ----------------------------------------------------------------------
-    private List<Integer> generateAllCombinations(int n, int k) {
+    public static List<Integer> generateAllCombinations(int n, int k) {
         List<Integer> combinations = new ArrayList<>();
         int combination = (1 << k) - 1;
         while (combination < (1 << n)) {

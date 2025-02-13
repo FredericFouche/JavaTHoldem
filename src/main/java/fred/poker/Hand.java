@@ -1,6 +1,7 @@
 package fred.poker;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -32,6 +33,7 @@ public class Hand implements Consumer<String> {
         if (hand.size() < 2) {
             for (int i = 0; i < number; i++) {
                 Card drawnHand = deck.draw();
+                hand.add(drawnHand);
             }
         } else {
             throw new IllegalArgumentException("Hand is limited to 2 cards.");
@@ -56,13 +58,58 @@ public class Hand implements Consumer<String> {
         return finalHand;
     }
 
-    public int[] encodeFinalHandToCactusKev(List<Card> finalHand) {
+    public static int[] encodeFinalHandToCactusKev(List<Card> finalHand) {
         int[] encodedHand = new int[finalHand.size()];
-
         for (int i = 0; i < finalHand.size(); i++) {
             encodedHand[i] = Card.convertToCactusKev(finalHand.get(i));
         }
         return encodedHand;
+    }
+
+    /**
+     * Evalue la meilleure main possible parmi les 21 mains possibles
+     * @param finalHand : main finale
+     * @return : tableau de 5 entiers représentant la meilleure main
+     */
+    public int[] evalBestHandWithinRange(List<Card> finalHand) {
+        // le tableau pour stocker la meilleure main
+        int[] bestHand = new int[5];
+        // récupère la main avec 7 cartes et l'encode en Cactus Kev pour l'évaluer
+        int[] encodedHand = encodeFinalHandToCactusKev(finalHand);
+        System.out.println("encodedHand within evalBestHandWithinRange: " + Arrays.toString(encodedHand));
+        // initialise le rang de la meilleure main à 0
+        int bestRank = 7463;
+        // initialise le rang de la main à 0
+        int rank;
+
+        // On génère toutes les combinaisons possibles de 5 cartes parmi les 7 cartes
+        List<Integer> handLookup = Lookup.generateAllCombinations(7, 5);
+
+        // Évaluer chaque combinaison
+        for (int combination : handLookup) {
+            int[] currentHand = new int[5];
+            int index = 0;
+            for (int i = 0; i < 7; i++) {
+                if ((combination & (1 << i)) != 0) {
+                    currentHand[index++] = encodedHand[i];
+                }
+            }
+
+            System.out.println("currentHand in loop: " + Arrays.toString(currentHand));
+
+            rank = Evaluator.evaluateHand(currentHand);
+
+            System.out.println("rank in loop: " + rank);
+
+            if (rank < bestRank) {
+                bestRank = rank;
+                System.out.println("bestRank in loop: " + bestRank);
+                System.arraycopy(currentHand, 0, bestHand, 0, 5);
+            }
+        }
+
+        // on retourne la meilleure main de 5 cartes
+        return bestHand;
     }
 
     @Override

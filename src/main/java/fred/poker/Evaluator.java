@@ -1,7 +1,6 @@
 package fred.poker;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 public class Evaluator {
@@ -13,47 +12,49 @@ public class Evaluator {
     public Evaluator() {
     }
 
-    /**
-     * Encode une main à partir des valeurs et des couleurs des cartes
-     * @param hand : tableau de 5 entiers représentant les cartes
-     * @return : main encodée au format Cactus Kev
-     */
-    public static int[] encodeHandToCactusKev(List<Card> hand) {
-        int[] encodedHand = new int[5];
-        for (int i = 0; i < hand.size(); i++) {
-            encodedHand[i] = Card.convertToCactusKev(hand.get(i));
-        }
-        return encodedHand;
-    }
-
     public static int evaluateHand(int[] encodedHand) {
-        // Vérifie si toutes les cartes ont la même couleur (flush)
-        if ((encodedHand[0] & encodedHand[1] & encodedHand[2] & encodedHand[3] & encodedHand[4] & 0xF000) != 0) {
-            System.out.println(Arrays.toString(encodedHand) + " is a test to check if all cards have the same color");
+        // vérification flush
+        boolean isFlush =
+                ((encodedHand[0] & encodedHand[1] & encodedHand[2] & encodedHand[3] & encodedHand[4]) & 0xF000)
+                        != 0;
 
-            // Combine les valeurs des cartes en utilisant l'opération OR
+        if (isFlush) {
+            // CAS FLUSH
+            // -----------------------------------------------
+            // Pas besoin de faire la multiplication rang par rang car on sait que chaque rang est différent
+
             int handOr = (encodedHand[0] | encodedHand[1] | encodedHand[2] | encodedHand[3] | encodedHand[4]) >> 16;
-            System.out.println("handOr: " + handOr);
-
-            // Calcule le produit des nombres premiers pour les bits de rang
             long prime = Card.primeProductFromRankBits(handOr);
 
-            System.out.println("prime: " + prime);
-            System.out.println(Lookup.getFlushLookup().get(prime));
-
-            // Recherche le rang dans la table de lookup des flush
             Map<Long, Integer> flushLookup = Lookup.getFlushLookup();
             Integer rank = flushLookup.get(prime);
-
-            // Vérifie si le rang est trouvé
             if (rank == null) {
-                throw new IllegalArgumentException("Rank is null");
+                throw new IllegalArgumentException("Rank is null in flushLookup");
+            }
+            return rank;
+
+        } else {
+            // CAS NON-FLUSH (paires, brelans, full, carré, straights, high-card, etc.)
+            // ---------------------------------------------------------
+            // On calcule le produit des nombres premiers des cartes pour trouver le rang de la main
+
+            long primeProduct = 1;
+            for (int i = 0; i < 5; i++) {
+                int primeOfCard = (encodedHand[i] & 0xFF);
+                primeProduct *= primeOfCard;
             }
 
+            Map<Long, Integer> unsuitedLookup = Lookup.getUnsuitedLookup();
+            Integer rank = unsuitedLookup.get(primeProduct);
+            if (rank == null) {
+                throw new IllegalArgumentException(
+                        "Rank is null in unsuitedLookup for primeProduct=" + primeProduct);
+            }
             return rank;
         }
-        return -1;
     }
+
+
 
     public int getPrimeProduct() {
         int[] primes = new int[5];
