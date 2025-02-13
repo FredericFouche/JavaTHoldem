@@ -1,136 +1,69 @@
 package fred.poker;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 public class Evaluator {
-    private static Table table;
-    private Hand hand;
     int[] values = new int[5];
     int[] suits = new int[5];
 
 
-    public Evaluator(Table table, Hand hand) {
-        Evaluator.table = table;
-        this.hand = hand;
+
+    public Evaluator() {
     }
 
-    public int evaluateHand(int[] hand) {
-        for (int i = 0; i < 5; i++) {
-            values[i] = (hand[i] % 13 == 0) ? 13 : hand[i] % 13;
-            suits[i] = (hand[i] - 1) / 13;
+    /**
+     * Encode une main à partir des valeurs et des couleurs des cartes
+     * @param hand : tableau de 5 entiers représentant les cartes
+     * @return : main encodée au format Cactus Kev
+     */
+    public static int[] encodeHandToCactusKev(List<Card> hand) {
+        int[] encodedHand = new int[5];
+        for (int i = 0; i < hand.size(); i++) {
+            encodedHand[i] = Card.convertToCactusKev(hand.get(i));
         }
+        return encodedHand;
+    }
 
-        int uniqueKeyPrimeProduct = getPrimeProduct();
+    public static int evaluateHand(int[] encodedHand) {
+        // Vérifie si toutes les cartes ont la même couleur (flush)
+        if ((encodedHand[0] & encodedHand[1] & encodedHand[2] & encodedHand[3] & encodedHand[4] & 0xF000) != 0) {
+            System.out.println(Arrays.toString(encodedHand) + " is a test to check if all cards have the same color");
 
-        return 1;
+            // Combine les valeurs des cartes en utilisant l'opération OR
+            int handOr = (encodedHand[0] | encodedHand[1] | encodedHand[2] | encodedHand[3] | encodedHand[4]) >> 16;
+            System.out.println("handOr: " + handOr);
+
+            // Calcule le produit des nombres premiers pour les bits de rang
+            long prime = Card.primeProductFromRankBits(handOr);
+
+            System.out.println("prime: " + prime);
+            System.out.println(Lookup.getFlushLookup().get(prime));
+
+            // Recherche le rang dans la table de lookup des flush
+            Map<Long, Integer> flushLookup = Lookup.getFlushLookup();
+            Integer rank = flushLookup.get(prime);
+
+            // Vérifie si le rang est trouvé
+            if (rank == null) {
+                throw new IllegalArgumentException("Rank is null");
+            }
+
+            return rank;
+        }
+        return -1;
     }
 
     public int getPrimeProduct() {
         int[] primes = new int[5];
+        System.out.println("values initial: " + Arrays.toString(values));
+        System.out.println("values: ");
         for (int i = 0; i < values.length; i++) {
+            System.out.println(values[i]);
             primes[i] = Card.PRIMES[values[i]];
         }
-
+        System.out.println("primes: " + Arrays.toString(primes));
         return Arrays.stream(primes).reduce(1, (a, b) -> a * b);
     }
-
-    /*
-    static boolean isOnePair(int[] values) {
-        return Arrays.stream(values).distinct().count() == 4;
-    }
-
-    static boolean isTwoPair(int[] values) {
-        int[] counts = new int[13];
-        for (int value : values) {
-            counts[value - 1]++;
-        }
-        int pairCount = 0;
-        for (int count : counts) {
-            if (count == 2) {
-                pairCount++;
-            }
-        }
-        return pairCount == 2;
-    }
-
-    static boolean isThreeOfAKind(int[] values) {
-        int[] counts = new int[13];
-        for (int value : values) {
-            counts[value - 1]++;
-        }
-        for (int count : counts) {
-            if (count == 3) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    static boolean isStraight(int[] values) {
-        Arrays.sort(values);
-
-        int intervalCount = 1;
-        for (int i = 0; i < (values.length - 1) ; i++) {
-            if ((values[i + 1] - values[i]) == 1) {
-                intervalCount++;
-                if (intervalCount == 5) {
-                    return true;
-                }
-            } else {
-                intervalCount = 1;
-            }
-        }
-        return false;
-    }
-
-    static boolean isFlush(int[] suits) {
-        return Arrays.stream(suits).distinct().count() == 1;
-    }
-
-    static boolean isFullHouse(int[] values) {
-        Arrays.sort(values);
-
-        int[] counts = new int[13];
-        if (Arrays.stream(values).distinct().count() == 2) {
-            for (int value : values) {
-                counts[value - 1]++;
-            }
-            for (int count : counts) {
-                if (count == 3) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        return false;
-    }
-
-    static boolean isFourOfAKind(int[] values) {
-        int[] counts = new int[13];
-        if (Arrays.stream(values).distinct().count() == 2) {
-            for (int value : values) {
-                counts[value - 1]++;
-            }
-            for (int count : counts) {
-                if (count == 4) {
-                    return true;
-                }
-            }
-            return false;
-        }
-        return false;
-    }
-
-    static boolean isStraightFlush(int[] values, int[] suits) {
-        return isStraight(values) && isFlush(suits);
-    }
-
-    static boolean isStraightFlushRoyal(int[] values, int[] suits) {
-        if (values[4] == 12 && values[0] == 0) {
-            values[0] = 13;
-            Arrays.sort(values);
-        }
-        return (isStraight(values) && isFlush(suits) && values[0] == 9);
-    }
-    */
 }

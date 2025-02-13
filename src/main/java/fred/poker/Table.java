@@ -45,15 +45,17 @@ public class Table implements Consumer<EventManager.EventType> {
         if (!communityCards.isEmpty()) {
             throw new IllegalArgumentException("Flop has already been drawn");
         } else {
-            List<Card> flopDrawn = deck.draw((byte) 3);
-            communityCards.addAll(flopDrawn);
+            for (int i = 0; i < 3; i++) {
+                Card flopDrawn = deck.draw();
+                communityCards.add(flopDrawn);
+            }
         }
     }
 
     public void dealTurn() {
         if (communityCards.size() == 3) {
-            List<Card> turnDrawn = deck.draw((byte) 1);
-            communityCards.addAll(turnDrawn);
+            Card flopDrawn = deck.draw();
+            communityCards.add(flopDrawn);
         } else {
             throw new IllegalArgumentException("Flop has not been drawn yet");
         }
@@ -61,8 +63,8 @@ public class Table implements Consumer<EventManager.EventType> {
 
     public void dealRiver() {
         if (communityCards.size() == 4) {
-            List<Card> riverDrawn = deck.draw((byte) 1);
-            communityCards.addAll(riverDrawn);
+            Card flopDrawn = deck.draw();
+            communityCards.add(flopDrawn);
         } else {
             throw new IllegalArgumentException("Turn has not been drawn yet");
         }

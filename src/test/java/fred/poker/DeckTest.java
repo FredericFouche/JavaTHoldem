@@ -28,10 +28,9 @@ class DeckTest {
     @Test
     void draw() {
         // Tirer 5 cartes avec la méthode draw
-        List<Card> drawnDeck = deck.draw((byte) 5);
+        Card drawnDeck = deck.draw();
         // Vérifier que le deck a 47 cartes restantes et que les 5 cartes tirées sont bien dans la main
         assertNotNull(drawnDeck);
-        assertEquals(5, drawnDeck.size());
         assertEquals(47, deck.deck.size());
     }
 

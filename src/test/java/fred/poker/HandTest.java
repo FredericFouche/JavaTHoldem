@@ -3,8 +3,6 @@ package fred.poker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class HandTest {
@@ -14,32 +12,33 @@ class HandTest {
     @BeforeEach
     void setUp() {
         Deck deck = new Deck();
-        hand = new Hand(deck);
+        Table table = new Table(deck, new EventManager());
+        hand = new Hand(deck, table);
     }
 
     @Test
-    void getHand() {
+    void getHoleCards() {
         assertNotNull(hand);
-        assertEquals(0, hand.getHand().size());
+        assertEquals(0, hand.getHoleCards().size());
     }
 
     @Test
-    void addCardToHand() {
-        hand.addCardToHand((byte) 1);
-        hand.addCardToHand((byte) 1);
-        assertEquals(2, hand.getHand().size());
+    void addCardTogetHoleCards() {
+        hand.addCardToHoleCards((byte) 2);
+        hand.addCardToHoleCards((byte) 1);
+        assertEquals(2, hand.getHoleCards().size());
     }
 
     @Test
-    void addCardToHandIllegal() {
-        hand.addCardToHand((byte) 2);
-        assertThrows(IllegalArgumentException.class, () -> hand.addCardToHand((byte) 1));
+    void addCardTogetHoleCardsIllegal() {
+        hand.addCardToHoleCards((byte) 2);
+        assertThrows(IllegalArgumentException.class, () -> hand.addCardToHoleCards((byte) 1));
     }
 
     @Test
-    void removeCardFromHand() {
-        hand.addCardToHand((byte) 2);
-        hand.removeCardFromHand();
-        assertEquals(0, hand.getHand().size());
+    void removeCardFromgetHoleCards() {
+        hand.addCardToHoleCards((byte) 2);
+        hand.removeCardFromHoleCards();
+        assertEquals(0, hand.getHoleCards().size());
     }
 }

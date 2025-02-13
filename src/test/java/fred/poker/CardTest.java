@@ -20,15 +20,15 @@ class CardTest {
     }
 
     @Test
-    void getCardType() {
-        card = new Card((byte) 1, "DIAMONDS");
-        assertEquals("DIAMONDS", card.getCardType());
-    }
-
-    @Test
     void getCard() {
         card = new Card((byte) 1, "DIAMONDS");
         assertEquals("1 DIAMONDS", card.getCard());
+    }
+
+    @Test
+    void convertToCactusKev() {
+        card = new Card((byte) 1, "DIAMONDS");
+        assertEquals(131331, Card.convertToCactusKev(card));
     }
 
 

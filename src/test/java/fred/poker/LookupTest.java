@@ -10,8 +10,7 @@ public class LookupTest {
 
     @BeforeEach
     public void setUp() {
-        lookup = new Lookup();
-        lookup.lookUpTable();
+        lookup = Lookup.getInstance();
     }
 
     @Test

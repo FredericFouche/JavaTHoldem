@@ -14,23 +14,20 @@ public class Deck {
     public List<Card> getFullDeck() {
         List<Card> fullDeck = new ArrayList<>();
 
-        for (byte value : Card.VALUES) {
-            for (String type : Card.TYPES) {
-                fullDeck.add(new Card(value, type));
-            }
-        }
-
         return fullDeck;
     }
 
-    public List<Card> draw(byte number) {
-        if (number > deck.size()) {
-            throw new IllegalArgumentException("Insufficient deck in deck to draw.");
-        } else {
-            List<Card> drawnDeck = new ArrayList<>(deck.subList(0,number));
-            deck = new ArrayList<>(deck.subList(number, deck.size()));
-            return drawnDeck;
+    /**
+     * Tire une carte du deck et la renvoie
+     * @return int
+     */
+    public Card draw() {
+        if (deck.isEmpty()) {
+            throw new IllegalArgumentException("Deck is empty");
         }
+        Card i = deck.remove(0).getCard();
+        System.out.println(i);
+        return i;
     }
 
     public void shuffle() {

@@ -25,7 +25,7 @@ public class Game {
             throw new IllegalArgumentException("Number of players must be between 2 and 8.");
         } else {
             for (int i = 0; i < numberOfPlayers; i++) {
-                Hand hand = new Hand(deck);
+                Hand hand = new Hand(deck, table);
                 Player player;
                 if (i == 0) {
                     player = new Player("Player 1", false, hand, eventManager);
