@@ -8,7 +8,7 @@ public class Main {
         game.dealCards();
 
         for (Player player : game.getPlayers()) {
-            System.out.println(player.getName() + "'s Hand: " + player.getHand().getHand());
+            System.out.println(player.getName() + "'s Hand: " + player.getHand().getHoleCards());
         }
     }
 }

@@ -52,6 +52,6 @@ public class Player implements Consumer<EventManager.EventType> {
     }
 
     public void handleDealCards() {
-        hand.addCardToHand((byte) 2);
+        hand.addCardToHoleCards((byte) 2);
     }
 }

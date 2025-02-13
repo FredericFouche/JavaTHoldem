@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class Table implements Consumer<EventManager.EventType> {
-    List<Card> communityCards;
-    Deck deck;
+    static List<Card> communityCards;
+    static Deck deck;
     private enum HandleEvent {
         DEAL_FLOP,
         DEAL_TURN,
@@ -41,28 +41,30 @@ public class Table implements Consumer<EventManager.EventType> {
         return communityCards;
     }
 
-    public void dealFlop() {
+    public static void dealFlop() {
         if (!communityCards.isEmpty()) {
             throw new IllegalArgumentException("Flop has already been drawn");
         } else {
-            List<Card> flopDrawn = deck.draw((byte) 3);
-            communityCards.addAll(flopDrawn);
+            for (int i = 0; i < 3; i++) {
+                Card flopDrawn = deck.draw();
+                communityCards.add(flopDrawn);
+            }
         }
     }
 
-    public void dealTurn() {
+    public static void dealTurn() {
         if (communityCards.size() == 3) {
-            List<Card> turnDrawn = deck.draw((byte) 1);
-            communityCards.addAll(turnDrawn);
+            Card flopDrawn = deck.draw();
+            communityCards.add(flopDrawn);
         } else {
             throw new IllegalArgumentException("Flop has not been drawn yet");
         }
     }
 
-    public void dealRiver() {
+    public static void dealRiver() {
         if (communityCards.size() == 4) {
-            List<Card> riverDrawn = deck.draw((byte) 1);
-            communityCards.addAll(riverDrawn);
+            Card flopDrawn = deck.draw();
+            communityCards.add(flopDrawn);
         } else {
             throw new IllegalArgumentException("Turn has not been drawn yet");
         }

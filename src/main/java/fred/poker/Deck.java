@@ -8,30 +8,48 @@ public class Deck {
     List<Card> deck;
 
     public Deck() {
-        this.deck = getFullDeck();
+        this.deck = createDeck();
+        if (deck.size() != 52) {
+            throw new IllegalStateException("Deck should have 52 cards but has " + deck.size());
+        }
     }
 
     public List<Card> getFullDeck() {
-        List<Card> fullDeck = new ArrayList<>();
+        return new ArrayList<>(deck);
+    }
 
-        for (byte value : Card.VALUES) {
-            for (String type : Card.TYPES) {
-                fullDeck.add(new Card(value, type));
+    /**
+     * Tire une carte du deck et la renvoie
+     * @return int
+     */
+    public Card draw() {
+        if (deck.isEmpty()) {
+            throw new IllegalArgumentException("Deck is empty");
+        }
+
+        Card i = deck.remove(0);
+        System.out.println(i);
+        return i;
+    }
+
+
+    /**
+     * Crée un deck de 52 cartes depuis les valeurs et couleurs des cartes
+     * les valeurs et couleurs sont présentes dans la class Card
+     * static int[] VALUES = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+     * static String[] SUITS = {"DIAMONDS", "SPADES", "CLUBS", "HEARTS"};
+     * @return Deck
+     */
+    private List<Card> createDeck() {
+        List<Card> newDeck = new ArrayList<>();
+        for (int value : Card.VALUES) {
+            for (String suit : Card.SUITS) {
+                newDeck.add(new Card(value, suit));
             }
         }
-
-        return fullDeck;
+        return newDeck;
     }
 
-    public List<Card> draw(byte number) {
-        if (number > deck.size()) {
-            throw new IllegalArgumentException("Insufficient deck in deck to draw.");
-        } else {
-            List<Card> drawnDeck = new ArrayList<>(deck.subList(0,number));
-            deck = new ArrayList<>(deck.subList(number, deck.size()));
-            return drawnDeck;
-        }
-    }
 
     public void shuffle() {
         Collections.shuffle(deck);

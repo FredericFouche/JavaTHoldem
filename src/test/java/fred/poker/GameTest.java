@@ -19,7 +19,7 @@ class GameTest {
     void dealCards() {
         game.dealCards();
         for (Player player : game.getPlayers()) {
-            assertEquals(2, player.getHand().getHand().size(), "Chaque joueur doit avoir 2 cartes en main.");
+            assertEquals(2, player.getHand().getHoleCards().size(), "Chaque joueur doit avoir 2 cartes en main.");
         }
     }
 

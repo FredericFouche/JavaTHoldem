@@ -27,13 +27,17 @@ class DeckTest {
 
     @Test
     void draw() {
-        // Tirer 5 cartes avec la méthode draw
-        List<Card> drawnDeck = deck.draw((byte) 5);
-        // Vérifier que le deck a 47 cartes restantes et que les 5 cartes tirées sont bien dans la main
-        assertNotNull(drawnDeck);
-        assertEquals(5, drawnDeck.size());
-        assertEquals(47, deck.deck.size());
+        Deck deck = new Deck();
+        List<Card> drawnCards = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            Card drawnCard = deck.draw();
+            drawnCards.add(drawnCard);
+        }
+        assertNotNull(drawnCards);
+        assertEquals(4, drawnCards.size());
+        assertEquals(48, deck.deck.size());
     }
+
 
     @Test
     void shuffle() {

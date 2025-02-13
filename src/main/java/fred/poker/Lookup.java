@@ -3,8 +3,8 @@ package fred.poker;
 import java.util.*;
 
 public class Lookup {
-    private Map<Long, Integer> flushLookup = new HashMap<>();
-    private Map<Long, Integer> unsuitedLookup = new HashMap<>();
+    private static Map<Long, Integer> flushLookup = new HashMap<>();
+    private static Map<Long, Integer> unsuitedLookup = new HashMap<>();
 
     public static final int MAX_STRAIGHT_FLUSH = 10;
     public static final int MAX_FOUR_OF_A_KIND   = 166;
@@ -14,6 +14,14 @@ public class Lookup {
     public static final int MAX_THREE_OF_A_KIND  = 2467;
     public static final int MAX_TWO_PAIR         = 3325;
     public static final int MAX_PAIR             = 6185;
+
+    private Lookup() {
+        lookUpTable();
+    }
+
+    public static synchronized Lookup getInstance() {
+         return new Lookup();
+    }
 
     public void lookUpTable() {
         buildFlushes();
@@ -52,8 +60,6 @@ public class Lookup {
             rank++;
         }
 
-        System.out.println("straight flushes: " + flushLookup.size());
-
         // Genere toutes les combinaisons de 5 cartes parmi 13
         List<Integer> allCombinationsFlush = generateAllCombinations(13, 5);
         Set<Integer> straightFlushSet = new HashSet<>();
@@ -71,7 +77,6 @@ public class Lookup {
             }
         }
 
-        System.out.println(flushCombinations.size() + " flush combinations"); // 1277
 
         flushCombinations.sort(Collections.reverseOrder());
 
@@ -86,9 +91,6 @@ public class Lookup {
             flushLookup.put(product, rank);
             rank++;
         }
-
-        System.out.println(flushLookup.size() + " flushes"); // 1287
-
         addStraightHighCards(straightFlushes, flushCombinations);
     }
 
@@ -180,8 +182,6 @@ public class Lookup {
             }
         }
 
-        System.out.println("unsuited: " + unsuitedLookup.size());
-
     }
 
     // ----------------------------------------------------------------------
@@ -208,7 +208,7 @@ public class Lookup {
     // Chaque combinaison est représentée par un entier dont les bits à 1 indiquent les rangs valides
     // Globalement de la magie noire.
     // ----------------------------------------------------------------------
-    private List<Integer> generateAllCombinations(int n, int k) {
+    public static List<Integer> generateAllCombinations(int n, int k) {
         List<Integer> combinations = new ArrayList<>();
         int combination = (1 << k) - 1;
         while (combination < (1 << n)) {
@@ -220,13 +220,12 @@ public class Lookup {
         return combinations;
     }
 
-    public Collection<Integer> getFlushLookup() {
-        System.out.println(flushLookup);
-        return flushLookup.values();
+    public static Map<Long, Integer> getFlushLookup() {
+        return flushLookup;
     }
 
-    public Collection<Integer> getUnsuitedLookup() {
-        return unsuitedLookup.values();
+    public static Map<Long, Integer> getUnsuitedLookup() {
+        return unsuitedLookup;
     }
 
 }
