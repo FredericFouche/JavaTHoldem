@@ -2,18 +2,19 @@ package fred.poker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-public class Hand {
-    List<Card> hand;
-    Deck deck;
+public class Hand implements Consumer<String> {
+    private final List<Card> hand;
+    private Deck deck;
 
-    public Hand() {
+    public Hand(Deck deck) {
         this.hand = new ArrayList<>();
-        this.deck = new Deck();
+        this.deck = deck;
     }
 
+
     public List<Card> getHand() {
-        // Une main n'a que 2 cartes maximums et 0 carte minimum
         if(hand.isEmpty()) {
             return hand;
         } else if (hand.size() == 2) {
@@ -23,10 +24,9 @@ public class Hand {
         }
     }
 
-    public void addCardToHand() {
-        // appel de la méthode draw() depuis la class Deck pour obtenir 2 cartes
+    public void addCardToHand(byte number) {
         if (hand.size() < 2) {
-            List<Card> drawnHand = deck.draw((byte) 1);
+            List<Card> drawnHand = deck.draw(number);
             hand.addAll(drawnHand);
         } else {
             throw new IllegalArgumentException("Hand is limited to 2 cards.");
@@ -40,4 +40,10 @@ public class Hand {
         hand.clear();
     }
 
+    @Override
+    public void accept(String s) {
+        if (s.equals("DEAL_CARDS")) {
+            addCardToHand((byte) 2);
+        }
+    }
 }
