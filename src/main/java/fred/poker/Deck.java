@@ -9,10 +9,10 @@ public class Deck {
     List<Card> deck;
 
     /*
-     * Crée un deck de 52 cartes en utilisant la méthode createDeck(), puis vérifie que le deck a bien 52 cartes.
+     * Crée un deck de 52 cartes en utilisant la méthode create(), puis vérifie que le deck a bien 52 cartes.
      */
     public Deck() {
-        this.deck = createDeck();
+        this.deck = create();
         if (deck.size() != 52) {
             throw new IllegalStateException("Deck should have 52 cards but has " + deck.size());
         }
@@ -22,7 +22,7 @@ public class Deck {
      * Getter retourne le deck
      * @return List<Card>
      */
-    public List<Card> getFullDeck() {
+    public List<Card> getDeck() {
         return deck;
     }
 
@@ -44,7 +44,7 @@ public class Deck {
      * Crée un deck de 52 cartes depuis les valeurs et couleurs des cartes
      * @return List<Card> deck
      */
-    private List<Card> createDeck() {
+    private List<Card> create() {
         List<Card> newDeck = new ArrayList<>();
         for (int value : Card.VALUES) {
             for (String suit : Card.SUITS) {

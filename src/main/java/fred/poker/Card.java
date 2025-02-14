@@ -90,7 +90,7 @@ public class Card {
      * @Param Card : carte à convertir
      * @return int : entier représentant la carte
      */
-    public static int convertTo32bitsInt(Card c) {
+    public static int encodeTo32bitsInt(Card c) {
         int suitVal;
         switch (c.getCardSuit()) {
             case "CLUBS":

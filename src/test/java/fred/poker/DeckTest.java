@@ -17,8 +17,8 @@ class DeckTest {
     }
 
     @Test
-    void getFullDeck() {
-        List<Card> fullDeck = deck.getFullDeck();
+    void getDeck() {
+        List<Card> fullDeck = deck.getDeck();
         assertNotNull(fullDeck);
         assertEquals(52, fullDeck.size());
         Set<Card> uniqueCards = new HashSet<>(fullDeck);
