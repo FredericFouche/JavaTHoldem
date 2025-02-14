@@ -1,6 +1,7 @@
 # JavaTHoldem
 
-JavaTHoldem is a Texas Hold'em poker game written in Java. It is a simple implementation of the game, using a console interface.
+JavaTHoldem is a Texas Hold'em poker game written in Java.
+It is a simple implementation of the game, using a console interface and ASCII art.
 It is a project for myself to learn Java and to practice programming.
 
 ## Features
@@ -61,6 +62,8 @@ This integer is composed of 4 bit ranges to store attributes :
 
 - [x] Implement the game methods
 - [x] Implement the Cactus Kev algorithm
+- [x] Implement Class for : Card, Deck, Hand, Player
+- [x] Write tests for the classes
 - [ ] Clean up codebas
 - [ ] Refactor the code
 - [ ] Comment code with Javadoc

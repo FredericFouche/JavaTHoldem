@@ -6,7 +6,6 @@ import java.util.function.Consumer;
 
 public class Game {
     private final List<Player> players;
-    private List<Consumer<String>> subscribers;
     private final Table table;
     private final EventManager eventManager = new EventManager();
 
@@ -15,7 +14,6 @@ public class Game {
         Deck deck = new Deck();
         deck.shuffle();
         this.players = new ArrayList<>();
-        this.subscribers = new ArrayList<>();
 
         this.table = new Table(deck, eventManager);
 

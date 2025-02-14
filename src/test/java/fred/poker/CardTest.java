@@ -32,9 +32,9 @@ class CardTest {
     }
 
     @Test
-    void convertToCactusKev() {
+    void convertTo32bitsInt() {
         card = new Card((byte) 1, "DIAMONDS");
-        assertEquals(135427, Card.convertToCactusKev(card));
+        assertEquals(135427, Card.convertTo32bitsInt(card));
     }
 
     @Test

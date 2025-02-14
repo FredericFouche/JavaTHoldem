@@ -5,11 +5,20 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Card {
+    /*
+     * Set de valeurs valides pour les cartes
+     */
     private static final Set<String> VALID_SuitS = new HashSet<>(Arrays.asList("DIAMONDS", "SPADES", "CLUBS", "HEARTS"));
 
+    /*
+     * Attributs d'une carte
+     */
     private int cardValue;
     private String cardSuit;
 
+    /*
+     * Constantes pour les cartes
+     */
     static int[] VALUES = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
     static String[] SUITS = {"CLUBS" ,"DIAMONDS", "SPADES", "HEARTS"};
     static int[] PRIMES = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41};
@@ -19,10 +28,30 @@ public class Card {
         setCardSuit(cardSuit);
     }
 
+    /*
+     * Getters
+     */
+
     public int getCardValue() {
         return cardValue;
     }
 
+    public String getCardSuit() {
+        return cardSuit;
+    }
+
+    public Card getCard() {
+        return this;
+    }
+
+    /*
+     * Setters
+     */
+
+    /**
+     * Setter pour la valeur de la carte
+     * @param cardValue : valeur de la carte
+     */
     public void setCardValue(int cardValue) {
         if (cardValue < 0 || cardValue > 12) {
             throw new IllegalArgumentException("Value must be between 0 and 12");
@@ -30,19 +59,15 @@ public class Card {
         this.cardValue = cardValue;
     }
 
-    public String getCardSuit() {
-        return cardSuit;
-    }
-
+    /**
+     * Setter pour la couleur de la carte
+     * @param cardSuit : couleur de la carte
+     */
     public void setCardSuit(String cardSuit) {
         if (!VALID_SuitS.contains(cardSuit)) {
             throw new IllegalArgumentException("Card Suit must be \"DIAMONDS\", \"SPADES\", \"CLUBS\", \"HEARTS\". Case sensitive.");
         }
         this.cardSuit = cardSuit;
-    }
-
-    public Card getCard() {
-        return this;
     }
 
     /**
@@ -61,11 +86,11 @@ public class Card {
     }
 
     /**
-     * convertisseur pour une Card en entier "Cactus Kev" compatible
+     * Convertisseur pour une Card en entier 32-bits "Cactus Kev" compatible
      * @Param Card : carte à convertir
      * @return int : entier représentant la carte
      */
-    public static int convertToCactusKev(Card c) {
+    public static int convertTo32bitsInt(Card c) {
         int suitVal;
         switch (c.getCardSuit()) {
             case "CLUBS":
@@ -84,6 +109,7 @@ public class Card {
                 throw new IllegalArgumentException("Invalid card Suit");
         }
 
+        
         int rankVal = c.getCardValue();
         int primeCard = PRIMES[rankVal];
         int rankBit = 1 << (16 + rankVal);

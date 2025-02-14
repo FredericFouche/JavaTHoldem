@@ -61,7 +61,7 @@ public class Hand implements Consumer<String> {
     public static int[] encodeFinalHandToCactusKev(List<Card> finalHand) {
         int[] encodedHand = new int[finalHand.size()];
         for (int i = 0; i < finalHand.size(); i++) {
-            encodedHand[i] = Card.convertToCactusKev(finalHand.get(i));
+            encodedHand[i] = Card.convertTo32bitsInt(finalHand.get(i));
         }
         return encodedHand;
     }

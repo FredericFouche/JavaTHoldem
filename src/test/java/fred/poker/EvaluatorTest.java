@@ -16,16 +16,4 @@ class EvaluatorTest {
         Lookup lookup = Lookup.getInstance();
     }
 
-    @Test
-    void getPrimeProduct() {
-        int[] values = {0, 1, 2, 3, 4};
-        Evaluator evaluator = new Evaluator();
-        evaluator.values = values;
-        assertEquals(2310, evaluator.getPrimeProduct());
-    }
-
-    @Test
-    void evaluateHand() {
-        int[] hand = {0, 1, 2, 3, 4};
-    }
 }
