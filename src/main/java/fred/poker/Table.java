@@ -13,10 +13,9 @@ public class Table implements Consumer<EventManager.EventType> {
         DEAL_RIVER,
         END_GAME
     }
-
     public Table(Deck deck, EventManager eventManager) {
-        this.communityCards = new ArrayList<>();
-        this.deck = deck;
+        communityCards = new ArrayList<>();
+        Table.deck = deck;
         for (HandleEvent event : HandleEvent.values()) {
             eventManager.subscribe(EventManager.EventType.valueOf(event.toString()), this);
         }

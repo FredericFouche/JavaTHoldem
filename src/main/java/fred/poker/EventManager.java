@@ -21,7 +21,7 @@ public class EventManager {
      * Enumération des différents events possibles atm
      */
     enum EventType {
-        DEAL_CARDS, DEAL_FLOP, DEAL_TURN, DEAL_RIVER, END_GAME
+        DEAL_CARDS, DEAL_FLOP, DEAL_TURN, DEAL_RIVER, ALL_IN, RAISE, CALL, FOLD, END_GAME
     }
 
     /**

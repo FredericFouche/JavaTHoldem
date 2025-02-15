@@ -10,6 +10,13 @@ public class Player implements Consumer<EventManager.EventType> {
     private String name;
     private boolean isAi;
     private final Hand hand;
+    private EventManager eventManager;
+    private enum playerEventEmitter {
+        CALL,
+        RAISE,
+        FOLD,
+        ALL_IN
+    }
 
     /**
      * Constructeur d'un joueur.
@@ -22,6 +29,7 @@ public class Player implements Consumer<EventManager.EventType> {
         this.name = name;
         this.isAi = isAi;
         this.hand = hand;
+        this.eventManager = eventManager;
         eventManager.subscribe(EventManager.EventType.DEAL_CARDS, this);
     }
 
@@ -34,6 +42,10 @@ public class Player implements Consumer<EventManager.EventType> {
         if (eventType == EventManager.EventType.DEAL_CARDS) {
             handleDealCards();
         }
+    }
+
+    public void emitEvent(EventManager.EventType eventType) {
+        eventManager.notifySubscribers(eventType);
     }
 
     // --- GETTERS & SETTERS ---
@@ -113,28 +125,27 @@ public class Player implements Consumer<EventManager.EventType> {
                 "-----------------------------------";
         if (winrate > 90) {
             if (handValue[5] < 1000) {
-                System.out.println("All-in");
+                eventManager.notifySubscribers(EventManager.EventType.ALL_IN);
                 System.out.println(str);
             } else {
-                System.out.println("Raise");
+                eventManager.notifySubscribers(EventManager.EventType.RAISE);
                 System.out.println(str);
             }
         } else if (winrate > 60) {
             if (handValue[5] > 1000 && handValue[5] < 1609) {
-                System.out.println("Raise");
+                eventManager.notifySubscribers(EventManager.EventType.RAISE);
                 System.out.println(str);
             } else {
-                System.out.println("Call");
+                eventManager.notifySubscribers(EventManager.EventType.CALL);
                 System.out.println(str);
             }
         } else if (winrate > 30) {
-            System.out.println("Call");
+            eventManager.notifySubscribers(EventManager.EventType.CALL);
             System.out.println(str);
         } else {
-            System.out.println("Fold");
+            eventManager.notifySubscribers(EventManager.EventType.FOLD);
             System.out.println(str);
         }
-
     }
 
     public static int monteCarloSimulation(int nbOfTrials, int handValue) {
@@ -154,4 +165,6 @@ public class Player implements Consumer<EventManager.EventType> {
     public static int doubleToPercent(double d) {
         return (int) (d * 100);
     }
+
+    // --- Player Event Emitter ---
 }
