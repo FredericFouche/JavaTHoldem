@@ -64,8 +64,8 @@ This integer is composed of 4 bit ranges to store attributes :
 - [x] Implement the Cactus Kev algorithm
 - [x] Implement Class for : Card, Deck, Hand, Player
 - [x] Write tests for the classes
-- [ ] Clean up codebas
-- [ ] Refactor the code
+- [x] Clean up codebas
+- [x] Refactor the code
 - [ ] Comment code with Javadoc
 - [ ] Game interface
 - [ ] Game logic
