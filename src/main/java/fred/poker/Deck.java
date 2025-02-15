@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Deck {
     // Un deck est composé de 52 objets cartes
-    List<Card> deck;
+    static List<Card> deck;
 
     /*
      * Crée un deck de 52 cartes en utilisant la méthode create(), puis vérifie que le deck a bien 52 cartes.
@@ -20,9 +20,10 @@ public class Deck {
 
     /**
      * Getter retourne le deck
+     *
      * @return List<Card>
      */
-    public List<Card> getDeck() {
+    public static List<Card> getDeck() {
         return deck;
     }
 
@@ -34,8 +35,7 @@ public class Deck {
         if (deck.isEmpty()) {
             throw new IllegalArgumentException("Deck is empty");
         }
-        Card i = deck.remove(0);
-        return i;
+        return deck.remove(0);
     }
 
 

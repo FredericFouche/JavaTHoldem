@@ -1,9 +1,6 @@
 package fred.poker;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class Hand implements Consumer<String> {
@@ -146,16 +143,11 @@ public class Hand implements Consumer<String> {
      * Methode pour générer une main aléatoire utile pour l'IA
      * @return : tableau de 5 entiers représentant une main aléatoire
      */
-    public static int[] randomHand() {
+    public static int[] randomHand(Deck actualDeck) {
         int[] randomHand = new int[5];
-        Deck simulatedDeck = new Deck();
-        simulatedDeck.shuffle();
-
         for (int i = 0; i < 5; i++) {
-            randomHand[i] = Card.encodeTo32bitsInt(simulatedDeck.draw());
+            randomHand[i] = Card.encodeTo32bitsInt(actualDeck.draw());
         }
-
-        simulatedDeck.destroyInstance();
         return randomHand;
     }
 

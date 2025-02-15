@@ -18,7 +18,7 @@ class DeckTest {
 
     @Test
     void getDeck() {
-        List<Card> fullDeck = deck.getDeck();
+        List<Card> fullDeck = (List<Card>) Deck.getDeck();
         assertNotNull(fullDeck);
         assertEquals(52, fullDeck.size());
         Set<Card> uniqueCards = new HashSet<>(fullDeck);
@@ -35,15 +35,15 @@ class DeckTest {
         }
         assertNotNull(drawnCards);
         assertEquals(4, drawnCards.size());
-        assertEquals(48, deck.deck.size());
+        assertEquals(48, Deck.deck.size());
     }
 
 
     @Test
     void shuffle() {
-        List<Card> originalDeck = new ArrayList<>(deck.deck);
+        List<Card> originalDeck = new ArrayList<>(Deck.deck);
         deck.shuffle();
-        List<Card> shuffledDeck = deck.deck;
+        List<Card> shuffledDeck = Deck.deck;
 
         // Vérifier que le deck a été mélangé
         assertNotEquals(originalDeck, shuffledDeck);

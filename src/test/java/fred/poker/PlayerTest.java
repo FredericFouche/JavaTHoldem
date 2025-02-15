@@ -17,14 +17,14 @@ class PlayerTest {
 
     @Test
     void monteCarloSimulation() {
-        Lookup.getInstance();
+        Deck actualDeck = new Deck();
+        actualDeck.shuffle();
 
-        int nbOftrials = 200;
+        int nbOfTrials = 200;
         int handValue = 5326;
 
-        int winrate = Player.monteCarloSimulation(nbOftrials, handValue);
+        int winrate = Player.monteCarloSimulation(nbOfTrials, handValue);
         assertTrue(winrate >= 0 && winrate <= 100);
-
 
         System.out.println("-------------------");
         System.out.println("Win rate: " + winrate + "%");
@@ -37,6 +37,7 @@ class PlayerTest {
             EventManager eventManager = new EventManager();
             Deck deck = new Deck();
             deck.shuffle();
+            System.out.println("Deck: " + deck);
             Table table = new Table(deck, eventManager);
 
             eventManager.notifySubscribers(EventManager.EventType.DEAL_FLOP);
@@ -51,7 +52,7 @@ class PlayerTest {
             hand.setHoleCards(holeCards);
 
             Player player = new Player("Player 1", true, hand, eventManager);
-            player.makeDecisionAi();
+            player.makeDecisionAi(true, deck);
         }
     }
 }

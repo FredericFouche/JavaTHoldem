@@ -112,7 +112,8 @@ class HandTest {
 
     @Test
     void randomHand() {
-        int[] res = Hand.randomHand();
+        Deck deck = new Deck();
+        int[] res = Hand.randomHand(deck);
         assertNotNull(res);
         assertEquals(5, res.length);
         System.out.println("Random hand: " + Arrays.toString(res));

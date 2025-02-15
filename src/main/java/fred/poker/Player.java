@@ -1,5 +1,6 @@
 package fred.poker;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -102,8 +103,14 @@ public class Player implements Consumer<EventManager.EventType> {
     /*
      * TODO : Algorithmes de décision pour les AI.
      */
-    public void makeDecisionAi() {
+    public void makeDecisionAi(boolean debug, Deck actualDeck) {
+        long startTime = 0;
+        if (debug) {
+            startTime = System.nanoTime();
+        }
+
         List<Card> handToEval = hand.getCompleteHand();
+
         int[] handValue;
         // On récupère la meilleure main possible dans les 7 cartes dispo
         if (handToEval.size() < 5) {
@@ -116,55 +123,63 @@ public class Player implements Consumer<EventManager.EventType> {
         // 1 est le rang le plus for et 7463 le rang le plus faible
         // L'algo doit estimer sur 100 itérations la probabilité de gagner
         // Il doit ensuite prendre une décision en fonction de la probabilité de gagner et de la force de la main
+        System.out.println("Deck : " + actualDeck.toString());
         int winrate = monteCarloSimulation(500, handValue[5]);
         String str =
                 "Win rate : " + winrate + "%" + "\n" +
-                "Hand value : " + handValue[5] + "\n" +
-                "-----------------------------------"+ "\n" +
-                "Next decision : " + "\n" +
-                "-----------------------------------";
+                "Hand value : " + handValue[5];
         if (winrate > 90) {
             if (handValue[5] < 1000) {
-                eventManager.notifySubscribers(EventManager.EventType.ALL_IN);
-                System.out.println(str);
+                playerEventEmitter("ALL_IN");
             } else {
-                eventManager.notifySubscribers(EventManager.EventType.RAISE);
-                System.out.println(str);
+                playerEventEmitter("RAISE");
             }
         } else if (winrate > 60) {
             if (handValue[5] > 1000 && handValue[5] < 1609) {
-                eventManager.notifySubscribers(EventManager.EventType.RAISE);
-                System.out.println(str);
+                playerEventEmitter("RAISE");
             } else {
-                eventManager.notifySubscribers(EventManager.EventType.CALL);
-                System.out.println(str);
+                playerEventEmitter("CALL");
             }
         } else if (winrate > 30) {
-            eventManager.notifySubscribers(EventManager.EventType.CALL);
-            System.out.println(str);
+            playerEventEmitter("CALL");
         } else {
-            eventManager.notifySubscribers(EventManager.EventType.FOLD);
+            playerEventEmitter("FOLD");
+        }
+
+        if (debug) {
+            long endTime = System.nanoTime();
+            long duration = (endTime - startTime) / 1000000;
+            str +=  "\n"
+                    +"Duration : " + duration + "ms" + "\n" +
+                    "-----------------------------------" + "\n" +
+                    "        Next decision : "+ "\n" +
+                    "-----------------------------------";
             System.out.println(str);
         }
     }
 
+    public void playerEventEmitter(String event) {
+        eventManager.notifySubscribers(EventManager.EventType.valueOf(playerEventEmitter.CALL.toString()));
+    }
+
     public static int monteCarloSimulation(int nbOfTrials, int handValue) {
         int wins = 0;
+
         for (int i = 0; i < nbOfTrials; i++) {
-            int[] opponentHand = Hand.randomHand();
+            Deck tempDeck = new Deck();
+            tempDeck.shuffle();
+            int[] opponentHand = Hand.randomHand(tempDeck);
             int opponentHandRank = Evaluator.evaluateHand(opponentHand);
             if (handValue < opponentHandRank) {
                 wins++;
             }
+            tempDeck.destroyInstance();
         }
-        double winRate = (double) wins / nbOfTrials;
-        return doubleToPercent(winRate);
+        return doubleToPercent((double) wins / nbOfTrials);
     }
 
     // --- Double to Percent(Int) conversion ---
     public static int doubleToPercent(double d) {
         return (int) (d * 100);
     }
-
-    // --- Player Event Emitter ---
 }
