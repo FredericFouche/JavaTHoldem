@@ -153,7 +153,6 @@ public class Hand implements Consumer<String> {
 
         for (int i = 0; i < 5; i++) {
             randomHand[i] = Card.encodeTo32bitsInt(simulatedDeck.draw());
-            System.out.println("Random Hand: " + Arrays.toString(randomHand));
         }
 
         simulatedDeck.destroyInstance();
@@ -171,4 +170,11 @@ public class Hand implements Consumer<String> {
         }
     }
 
+    public void setHoleCards(List<Card> holeCards) {
+        if (holeCards.size() != 2) {
+            throw new IllegalArgumentException("Hole cards must contain 2 cards.");
+        }
+        hand.clear();
+        hand.addAll(holeCards);
+    }
 }

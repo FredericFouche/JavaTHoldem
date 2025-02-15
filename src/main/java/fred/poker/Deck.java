@@ -35,7 +35,6 @@ public class Deck {
             throw new IllegalArgumentException("Deck is empty");
         }
         Card i = deck.remove(0);
-        System.out.println(i);
         return i;
     }
 

@@ -109,14 +109,11 @@ public class Card {
                 throw new IllegalArgumentException("Invalid card Suit");
         }
 
-
         int rankVal = c.getCardValue();
         int rankBit = 1 << (16 + rankVal);
         int primeCard = PRIMES[rankVal];
         int rankNibble = (rankVal << 8);
 
-        System.out.printf("   suitNibble=%04X, rankBits=%04X, primeValue=%02X\n",
-                rankNibble << 12, rankVal << 8, primeCard);
         // Magie noire qui permet de construire un entier à partir des valeurs de la carte
         // Bits 0-7 : prime de la carte
         // Bits 8-11 : rank de la carte

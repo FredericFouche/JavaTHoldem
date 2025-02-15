@@ -9,7 +9,6 @@ import java.util.function.Consumer;
 public class Player implements Consumer<EventManager.EventType> {
     private String name;
     private boolean isAi;
-    // TODO
     private final Hand hand;
 
     /**
@@ -92,62 +91,53 @@ public class Player implements Consumer<EventManager.EventType> {
      * TODO : Algorithmes de décision pour les AI.
      */
     public void makeDecisionAi() {
-        // On recupère la main du joueur et les cartes de la table
         List<Card> handToEval = hand.getCompleteHand();
+        int[] handValue;
         // On récupère la meilleure main possible dans les 7 cartes dispo
-        int[] handValue = Hand.findBestHandInRange(handToEval, true);
-        // handValue[6] contient le rang de la main
-        /* public static final int MAX_STRAIGHT_FLUSH = 10;
-        public static final int MAX_FOUR_OF_A_KIND   = 166;
-        public static final int MAX_FULL_HOUSE       = 322;
-        public static final int MAX_FLUSH            = 1599;
-        public static final int MAX_STRAIGHT         = 1609;
-        public static final int MAX_THREE_OF_A_KIND  = 2467;
-        public static final int MAX_TWO_PAIR         = 3325;
-        public static final int MAX_PAIR             = 6185; */
-        // On peut utiliser ces valeurs pour déterminer la force de la main (de 5 cartes minimum) dans toute les mains
-        // Mais ça ne suffit pas pour déterminer la décision à prendre pour l'AI
-        // car il faut aussi prendre en compte les probabilités de gagner face aux autres joueurs
-        // On peut utiliser la simulation de Monte Carlo pour ça
-        if (handValue[6] >= 6185) {
-            // On a une paire ou moins
-            // On peut fold
-        } else if (handValue[6] >= 3325) {
-            // On a deux paires ou moins
-            // On peut call
-        } else if (handValue[6] >= 2467) {
-            // On a un brelan ou moins
-            // On peut raise
-        } else if (handValue[6] >= 1609) {
-            // On a une suite ou moins
-            // On peut all-in
-        } else if (handValue[6] >= 1599) {
-            // On a une couleur ou moins
-            // On peut all-in
-        } else if (handValue[6] >= 322) {
-            // On a un full ou moins
-            // On peut all-in
-        } else if (handValue[6] >= 166) {
-            // On a un carré ou moins
-            // On peut all-in
-        } else {
-            // On a une quinte flush ou mieux
-            // On peut all-in
+        if (handToEval.size() < 5) {
+            System.out.println("Hand debug : " + handToEval);
+            throw new IllegalArgumentException("Hand must contain at least 5 cards.");
         }
 
+        handValue = Hand.findBestHandInRange(handToEval, true);
 
-
-        // TODO : Implémenter les algorithmes de décision pour les AI.
-        // utilisation de la simulation de Monte Carlo
-        // evaluation de la probabilité de gagner pour chaque AI
-        // if score de main == très fort ou proba > 0.75 alors all-in
-        // else if score de main == fort ou proba > 0.5 alors raise
-        // else if score de main == moyen ou proba > 0.25 alors call
-        // else fold
+        // 1 est le rang le plus for et 7463 le rang le plus faible
+        // L'algo doit estimer sur 100 itérations la probabilité de gagner
+        // Il doit ensuite prendre une décision en fonction de la probabilité de gagner et de la force de la main
+        int winrate = monteCarloSimulation(500, handValue[5]);
+        String str =
+                "Win rate : " + winrate + "%" + "\n" +
+                "Hand value : " + handValue[5] + "\n" +
+                "-----------------------------------"+ "\n" +
+                "Next decision : " + "\n" +
+                "-----------------------------------";
+        if (winrate > 90) {
+            if (handValue[5] < 1000) {
+                System.out.println("All-in");
+                System.out.println(str);
+            } else {
+                System.out.println("Raise");
+                System.out.println(str);
+            }
+        } else if (winrate > 60) {
+            if (handValue[5] > 1000 && handValue[5] < 1609) {
+                System.out.println("Raise");
+                System.out.println(str);
+            } else {
+                System.out.println("Call");
+                System.out.println(str);
+            }
+        } else if (winrate > 30) {
+            System.out.println("Call");
+            System.out.println(str);
+        } else {
+            System.out.println("Fold");
+            System.out.println(str);
+        }
 
     }
 
-    public static double monteCarloSimulation(int nbOfTrials, int handValue) {
+    public static int monteCarloSimulation(int nbOfTrials, int handValue) {
         int wins = 0;
         for (int i = 0; i < nbOfTrials; i++) {
             int[] opponentHand = Hand.randomHand();
@@ -156,6 +146,12 @@ public class Player implements Consumer<EventManager.EventType> {
                 wins++;
             }
         }
-        return (double) wins / nbOfTrials;
+        double winRate = (double) wins / nbOfTrials;
+        return doubleToPercent(winRate);
+    }
+
+    // --- Double to Percent(Int) conversion ---
+    public static int doubleToPercent(double d) {
+        return (int) (d * 100);
     }
 }
