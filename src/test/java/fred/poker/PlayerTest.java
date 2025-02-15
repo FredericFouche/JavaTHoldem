@@ -9,25 +9,23 @@ class PlayerTest {
 
     @BeforeEach
     void setUp() {
+        Lookup.getInstance();
     }
 
     @Test
-    void getName() {
+    void monteCarloSimulation() {
+        Lookup.getInstance();
+
+        int nbOftrials = 200;
+        int handValue = 3326;
+
+        double winrate = Player.monteCarloSimulation(nbOftrials, handValue);
+        assertTrue(winrate >= 0 && winrate <= 1);
+
+
+        System.out.println("-------------------");
+        System.out.println("Winrate: " + winrate);
+        System.out.println("-------------------");
     }
 
-    @Test
-    void setName() {
-    }
-
-    @Test
-    void getPlayerHand() {
-    }
-
-    @Test
-    void drawHand() {
-    }
-
-    @Test
-    void removeHand() {
-    }
 }

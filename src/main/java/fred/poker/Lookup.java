@@ -29,17 +29,16 @@ public class Lookup {
     }
 
     // ----------------------------------------------------------------------
-    // 1. Construction des flush (flush classiques et straight flush)
+    // 1. Construction des tables de lookup pour les flush
     // ----------------------------------------------------------------------
     private void buildFlushes() {
 
-        // cet array contient les 10 combinaisons de cartes qui forment un flush sous forme de binaire
+        // cet array contient les 10 combinaisons de cartes qui forment un flush straight sous forme de binaire
         // 1 = carte présente, 0 = carte absente
-        // par exemple 0b1111100000000 = 10JQKA (5 cartes)
         int[] straightFlushes = {
-                0b1111100000000,
-                0b0111110000000,
-                0b0011111000000,
+                0b1111100000000, // AKJQT
+                0b0111110000000, // KJQT9
+                0b0011111000000, // QJT98
                 0b0001111100000,
                 0b0000111110000,
                 0b0000011111000,
@@ -50,34 +49,40 @@ public class Lookup {
         };
 
         int rank = 1;
-        // Cette boucle permet de parcourir les 10 combinaisons de cartes qui forment un flush
-        // et de les ajouter à la table de lookup sous forme de clé/valeur
-        // la clé est le produit des nombres premiers des cartes qui forment le flush
-        // la valeur est le rang du flush, on commence à 1 et on incrémente à chaque tour de boucle
+
+        /*
+          On ajoute les combinaisons de straight flush au début de la table de lookup
+         */
         for (int mask: straightFlushes) {
             long product = primeProductFromRankBits(mask);
             flushLookup.put(product, rank);
             rank++;
         }
 
-        // Genere toutes les combinaisons de 5 cartes parmi 13
+        /*
+          On génère toutes les combinaisons possibles de flush
+         */
         List<Integer> allCombinationsFlush = generateAllCombinations(13, 5);
-        Set<Integer> straightFlushSet = new HashSet<>();
+
+        /*
+            On ajoute les combinaisons de flush qui ne sont pas des straight flush à un set
+         */
+        Set<Integer> straightMasks = new HashSet<>();
         for (int mask: straightFlushes) {
-            straightFlushSet.add(mask);
+            straightMasks.add(mask);
         }
 
-        // Créer une list pour stocker les combinasons qui ne sont pas des straight flush
+        /*
+            On crée une liste pour les combinaisons de flush qui ne sont pas des straight flush
+            Pour déduire les combinaisons de flush qui ne sont pas des straight flush, on utilise le set précédent
+            Ensuite on trie la liste par ordre décroissant car les combinaisons les plus fortes sont les plus hautes
+         */
         List<Integer> flushCombinations = new ArrayList<>();
-
-        // Ajouter les combinaisons qui ne sont pas des straight flush à la list
         for (int combination: allCombinationsFlush) {
-            if (!straightFlushSet.contains(combination)) {
+            if (!straightMasks.contains(combination)) {
                 flushCombinations.add(combination);
             }
         }
-
-
         flushCombinations.sort(Collections.reverseOrder());
 
         /*
@@ -94,14 +99,33 @@ public class Lookup {
         addStraightHighCards(straightFlushes, flushCombinations);
     }
 
-    private void addStraightHighCards(int[] straightFlushes, List<Integer> flushCombinations) {
+    // ----------------------------------------------------------------------
+    // A ce Stade on a ajouté les combinaisons de straight flush dans les rangs 1 à 10
+    // On a ajouté les combinaisons de flush qui ne sont pas des straight flush dans les rangs 323 à 1599
+    // ----------------------------------------------------------------------
+
+    /**
+     *
+     * @param straightMasks : combinaisons de straight flush
+     * @param flushCombinations : combinaisons de flush
+     */
+    private void addStraightHighCards(int[] straightMasks, List<Integer> flushCombinations) {
+
+        /*
+        Insère les masques de quinte (straights non-suited) dans unsuitedLookup
+        en leur attribuant un rang juste après les flushes
+        */
         int rank = MAX_FLUSH + 1;
-        for (Integer straight : straightFlushes) {
+        for (Integer straight : straightMasks) {
             long primeProduct = primeProductFromRankBits(straight);
             unsuitedLookup.put(primeProduct, rank);
             rank++;
         }
 
+        /*
+        Réutilise les combinaisons de rangs (ex-flush) pour les classer
+        en High Card dans unsuitedLookup après les paires
+        */
         rank = MAX_PAIR + 1;
         for (Integer flush : flushCombinations) {
             long primeProduct = primeProductFromRankBits(flush);
@@ -116,7 +140,9 @@ public class Lookup {
     // ----------------------------------------------------------------------
     private void buildMultiples() {
 
-        // Four of a kind
+        /*
+        Ajoute les combinaisons de 4 cartes de même rang (quads) dans unsuitedLookup
+         */
         int rank = MAX_STRAIGHT_FLUSH + 1;
         for (int i = 12; i >= 0; i--) {
             for (int kicker = 12; kicker >= 0; kicker--) {
@@ -127,7 +153,9 @@ public class Lookup {
             }
         }
 
-        // Full house
+        /*
+        Les full houses
+         */
         rank = MAX_FOUR_OF_A_KIND + 1;
         for(int brelan = 12; brelan >= 0; brelan--) {
             for(int pair = 12; pair >= 0; pair--) {
@@ -138,7 +166,9 @@ public class Lookup {
             }
         }
 
-        // Three of a kind
+        /*
+        Les Brelans
+         */
         rank = MAX_STRAIGHT + 1;
         for (int i = 12; i >= 0; i--) {
             for (int kicker1 = 12; kicker1 >= 0; kicker1--) {
@@ -152,7 +182,9 @@ public class Lookup {
             }
         }
 
-        // Two pair
+        /*
+        Les double paires
+         */
         rank = MAX_THREE_OF_A_KIND + 1;
         for (int highPair = 12; highPair >= 0; highPair--) {
             for (int lowPair = highPair - 1; lowPair >= 0; lowPair--) {
@@ -165,7 +197,9 @@ public class Lookup {
             }
         }
 
-        // One pair
+        /*
+        Les paires
+         */
         rank = MAX_TWO_PAIR + 1;
         for (int pair = 12; pair >= 0; pair--) {
             for (int kicker1 = 12; kicker1 >= 0; kicker1--) {
@@ -185,6 +219,15 @@ public class Lookup {
     }
 
     // ----------------------------------------------------------------------
+    // Fonctions utilitaires
+    // ----------------------------------------------------------------------
+
+    /**
+     * Puissance d'un nombre
+     * @param base : base
+     * @param exponent : exposant
+     * @return : base exposant exponent
+     */
     private long pow(long base, int exponent) {
         long result = 1;
         for (int i = 0; i < exponent; i++) {
@@ -193,6 +236,11 @@ public class Lookup {
         return result;
     }
 
+    /**
+     * Produit des nombres premiers associés aux rangs
+     * @param rankBits : bits représentant les rangs
+     * @return : produit des nombres premiers associés aux rangs
+     */
     long primeProductFromRankBits(int rankBits) {
         long product = 1;
         for (int i = 0; i < 13; i++) {
@@ -220,10 +268,22 @@ public class Lookup {
         return combinations;
     }
 
+    // ----------------------------------------------------------------------
+    // Getters
+    // ----------------------------------------------------------------------
+
+    /**
+     * Getter lookup flush
+     * @return : table de lookup pour les flush
+     */
     public static Map<Long, Integer> getFlushLookup() {
         return flushLookup;
     }
 
+    /**
+     * Getter lookup unsuited
+     * @return : table de lookup pour les mains non-flush
+     */
     public static Map<Long, Integer> getUnsuitedLookup() {
         return unsuitedLookup;
     }

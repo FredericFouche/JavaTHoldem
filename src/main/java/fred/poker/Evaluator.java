@@ -1,21 +1,20 @@
 package fred.poker;
 
-import java.util.Arrays;
 import java.util.Map;
 
 public class Evaluator {
-    int[] values = new int[5];
-    int[] suits = new int[5];
 
+    /**
+     * Evalue en utilisant les tables de lookup la force d'une main de 5 cartes.
+     *
+     * @param encodedFinalHand : la main de 5 cartes encodée sur 32 bits
+     * @return le rang de la main
+     */
+    public static int evaluateHand(int[] encodedFinalHand) {
 
-
-    public Evaluator() {
-    }
-
-    public static int evaluateHand(int[] encodedHand) {
-        // vérification flush
+        // cette expression permet de vérifier si toutes les cartes sont de la même couleur
         boolean isFlush =
-                ((encodedHand[0] & encodedHand[1] & encodedHand[2] & encodedHand[3] & encodedHand[4]) & 0xF000)
+                ((encodedFinalHand[0] & encodedFinalHand[1] & encodedFinalHand[2] & encodedFinalHand[3] & encodedFinalHand[4]) & 0xF000)
                         != 0;
 
         if (isFlush) {
@@ -23,7 +22,7 @@ public class Evaluator {
             // -----------------------------------------------
             // Pas besoin de faire la multiplication rang par rang car on sait que chaque rang est différent
 
-            int handOr = (encodedHand[0] | encodedHand[1] | encodedHand[2] | encodedHand[3] | encodedHand[4]) >> 16;
+            int handOr = (encodedFinalHand[0] | encodedFinalHand[1] | encodedFinalHand[2] | encodedFinalHand[3] | encodedFinalHand[4]) >> 16;
             long prime = Card.primeProductFromRankBits(handOr);
 
             Map<Long, Integer> flushLookup = Lookup.getFlushLookup();
@@ -40,7 +39,7 @@ public class Evaluator {
 
             long primeProduct = 1;
             for (int i = 0; i < 5; i++) {
-                int primeOfCard = (encodedHand[i] & 0xFF);
+                int primeOfCard = (encodedFinalHand[i] & 0xFF);
                 primeProduct *= primeOfCard;
             }
 
@@ -52,19 +51,5 @@ public class Evaluator {
             }
             return rank;
         }
-    }
-
-
-
-    public int getPrimeProduct() {
-        int[] primes = new int[5];
-        System.out.println("values initial: " + Arrays.toString(values));
-        System.out.println("values: ");
-        for (int i = 0; i < values.length; i++) {
-            System.out.println(values[i]);
-            primes[i] = Card.PRIMES[values[i]];
-        }
-        System.out.println("primes: " + Arrays.toString(primes));
-        return Arrays.stream(primes).reduce(1, (a, b) -> a * b);
     }
 }

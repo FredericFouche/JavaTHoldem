@@ -5,17 +5,25 @@ import java.util.Collections;
 import java.util.List;
 
 public class Deck {
+    // Un deck est composé de 52 objets cartes
     List<Card> deck;
 
+    /*
+     * Crée un deck de 52 cartes en utilisant la méthode create(), puis vérifie que le deck a bien 52 cartes.
+     */
     public Deck() {
-        this.deck = createDeck();
+        this.deck = create();
         if (deck.size() != 52) {
             throw new IllegalStateException("Deck should have 52 cards but has " + deck.size());
         }
     }
 
-    public List<Card> getFullDeck() {
-        return new ArrayList<>(deck);
+    /**
+     * Getter retourne le deck
+     * @return List<Card>
+     */
+    public List<Card> getDeck() {
+        return deck;
     }
 
     /**
@@ -26,7 +34,6 @@ public class Deck {
         if (deck.isEmpty()) {
             throw new IllegalArgumentException("Deck is empty");
         }
-
         Card i = deck.remove(0);
         System.out.println(i);
         return i;
@@ -35,12 +42,9 @@ public class Deck {
 
     /**
      * Crée un deck de 52 cartes depuis les valeurs et couleurs des cartes
-     * les valeurs et couleurs sont présentes dans la class Card
-     * static int[] VALUES = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
-     * static String[] SUITS = {"DIAMONDS", "SPADES", "CLUBS", "HEARTS"};
-     * @return Deck
+     * @return List<Card> deck
      */
-    private List<Card> createDeck() {
+    private List<Card> create() {
         List<Card> newDeck = new ArrayList<>();
         for (int value : Card.VALUES) {
             for (String suit : Card.SUITS) {
@@ -51,8 +55,15 @@ public class Deck {
     }
 
 
+    /**
+     * Mélange le deck en utilisant les méthodes static de la classe Collections
+     */
     public void shuffle() {
         Collections.shuffle(deck);
+    }
+
+    public void destroyInstance() {
+        deck.clear();
     }
 
 }

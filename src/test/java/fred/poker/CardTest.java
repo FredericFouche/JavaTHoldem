@@ -32,9 +32,9 @@ class CardTest {
     }
 
     @Test
-    void convertToCactusKev() {
+    void encodeTo32bitsInt() {
         card = new Card((byte) 1, "DIAMONDS");
-        assertEquals(135427, Card.convertToCactusKev(card));
+        assertEquals(1179907, Card.encodeTo32bitsInt(card));
     }
 
     @Test
@@ -48,7 +48,7 @@ class CardTest {
         Card c5 = new Card((byte) 5, "DIAMONDS");
 
         List<Card> cards = new ArrayList<>(Arrays.asList(c1, c2, c3, c4, c5));
-        int[] hand = Hand.encodeFinalHandToCactusKev(cards);
+        int[] hand = Hand.encodeCompleteHand(cards);
         System.out.println(Arrays.toString(hand) + " hand straight flush test");
 
         int eval = Evaluator.evaluateHand(hand);
@@ -66,7 +66,7 @@ class CardTest {
 
         List<Card> cards = Arrays.asList(c1, c2, c3, c4, c5);
 
-        int[] hand = Hand.encodeFinalHandToCactusKev(cards);
+        int[] hand = Hand.encodeCompleteHand(cards);
         System.out.println("Encoded hand for Full House: " + Arrays.toString(hand));
 
         int eval = Evaluator.evaluateHand(hand);
@@ -88,7 +88,7 @@ class CardTest {
 
         List<Card> cards = Arrays.asList(c1, c2, c3, c4, c5);
 
-        int[] hand = Hand.encodeFinalHandToCactusKev(cards);
+        int[] hand = Hand.encodeCompleteHand(cards);
         System.out.println("Encoded hand for Straight (2..6): " + Arrays.toString(hand));
 
         int eval = Evaluator.evaluateHand(hand);

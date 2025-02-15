@@ -3,6 +3,7 @@ package fred.poker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,92 +20,101 @@ class HandTest {
     }
 
     @Test
-    void getHoleCards() {
+    void getPlayerHand() {
         assertNotNull(hand);
-        assertEquals(0, hand.getHoleCards().size());
+        assertEquals(0, hand.getPlayerHand().size());
     }
 
     @Test
-    void addCardToHoleCards() {
-        hand.addCardToHoleCards((byte) 2);
-        assertEquals(2, hand.getHoleCards().size());
+    void drawCardPlayerHand() {
+        hand.drawCardPlayerHand((byte) 2);
+        assertEquals(2, hand.getPlayerHand().size());
     }
 
     @Test
-    void addCardToHoleCardsIllegal() {
-        hand.addCardToHoleCards((byte) 2);
-        assertThrows(IllegalArgumentException.class, () -> hand.addCardToHoleCards((byte) 1));
+    void drawCardPlayerHandIllegal() {
+        hand.drawCardPlayerHand((byte) 2);
+        assertThrows(IllegalArgumentException.class, () -> hand.drawCardPlayerHand((byte) 1));
     }
 
     @Test
-    void removeCardFromHoleCards() {
-        hand.addCardToHoleCards((byte) 2);
-        hand.removeCardFromHoleCards();
-        assertEquals(0, hand.getHoleCards().size());
+    void clearPlayerHand() {
+        hand.drawCardPlayerHand((byte) 2);
+        hand.clearPlayerHand();
+        assertEquals(0, hand.getPlayerHand().size());
     }
 
     @Test
-    void getFinalHandWithNoCards() {
-        List<Card> finalHand = hand.getFinalHand();
+    void getCompleteHandWithNoCards() {
+        List<Card> finalHand = hand.getCompleteHand();
         assertEquals(0, finalHand.size());
     }
 
     @Test
-    void getFinalHandWithHoleCardsOnly() {
-        hand.addCardToHoleCards((byte) 2);
-        List<Card> finalHand = hand.getFinalHand();
+    void getCompleteHandWithHoleCardsOnly() {
+        hand.drawCardPlayerHand((byte) 2);
+        List<Card> finalHand = hand.getCompleteHand();
         assertEquals(2, finalHand.size());
     }
 
     @Test
-    void getFinalHandWithCommunityCardsOnly() {
+    void getCompleteHandWithCommunityCardsOnly() {
         Table.dealFlop();
         Table.dealTurn();
         Table.dealRiver();
-        List<Card> finalHand = hand.getFinalHand();
+        List<Card> finalHand = hand.getCompleteHand();
         assertEquals(5, finalHand.size());
     }
 
     @Test
-    void getFinalHandWithHoleAndCommunityCards() {
-        hand.addCardToHoleCards((byte) 2);
+    void getCompleteHandWithHoleAndCommunityCards() {
+        hand.drawCardPlayerHand((byte) 2);
         Table.dealFlop();
         Table.dealTurn();
         Table.dealRiver();
-        List<Card> finalHand = hand.getFinalHand();
+        List<Card> finalHand = hand.getCompleteHand();
         assertEquals(7, finalHand.size());
     }
 
     @Test
-    void encodeFinalHandToCactusKevWithNoCards() {
-        List<Card> finalHand = hand.getFinalHand();
-        int[] encodedHand = Hand.encodeFinalHandToCactusKev(finalHand);
+    void encodeCompleteHandWithNoCards() {
+        List<Card> finalHand = hand.getCompleteHand();
+        int[] encodedHand = Hand.encodeCompleteHand(finalHand);
         assertEquals(0, encodedHand.length);
     }
 
     @Test
-    void encodeFinalHandToCactusKevWithHoleAndCommunityCards() {
-        hand.addCardToHoleCards((byte) 2);
+    void encodeCompleteHandWithHoleAndCommunityCards() {
+        hand.drawCardPlayerHand((byte) 2);
         Table.dealFlop();
         Table.dealTurn();
         Table.dealRiver();
-        List<Card> finalHand = hand.getFinalHand();
-        int[] encodedHand = Hand.encodeFinalHandToCactusKev(finalHand);
+        List<Card> finalHand = hand.getCompleteHand();
+        int[] encodedHand = Hand.encodeCompleteHand(finalHand);
         assertEquals(7, encodedHand.length);
     }
 
     @Test
-    void evalBestHandWithinRange() {
+    void findBestHandInRange() {
         Lookup.getInstance();
 
         // Construire le jeu de test
-        hand.addCardToHoleCards((byte) 2);
+        hand.drawCardPlayerHand((byte) 2);
         Table.dealFlop();
         Table.dealTurn();
         Table.dealRiver();
-        List<Card> finalHand = hand.getFinalHand();
+        List<Card> finalHand = hand.getCompleteHand();
 
-        int[] bestHand = hand.evalBestHandWithinRange(finalHand);
+        int[] bestHand = Hand.findBestHandInRange(finalHand, false);
+        System.out.println("Best hand: " + Arrays.toString(bestHand));
         assertNotNull(bestHand);
+    }
+
+    @Test
+    void randomHand() {
+        int[] res = Hand.randomHand();
+        assertNotNull(res);
+        assertEquals(5, res.length);
+        System.out.println("Random hand: " + Arrays.toString(res));
     }
 }
