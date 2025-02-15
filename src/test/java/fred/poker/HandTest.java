@@ -3,6 +3,7 @@ package fred.poker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -104,7 +105,16 @@ class HandTest {
         Table.dealRiver();
         List<Card> finalHand = hand.getCompleteHand();
 
-        int[] bestHand = hand.findBestHandInRange(finalHand);
+        int[] bestHand = Hand.findBestHandInRange(finalHand, false);
+        System.out.println("Best hand: " + Arrays.toString(bestHand));
         assertNotNull(bestHand);
+    }
+
+    @Test
+    void randomHand() {
+        int[] res = Hand.randomHand();
+        assertNotNull(res);
+        assertEquals(5, res.length);
+        System.out.println("Random hand: " + Arrays.toString(res));
     }
 }

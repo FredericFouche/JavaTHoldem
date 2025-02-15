@@ -3,6 +3,7 @@ package fred.poker;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class Hand implements Consumer<String> {
@@ -67,7 +68,7 @@ public class Hand implements Consumer<String> {
 
     /**
      * Crée la main finale en ajoutant les cartes de la table et les cartes cachées
-     * @return : List des 7 cartes (valeurs/couleurs) de la main finale
+     * @return : List des 2-7 cartes (valeurs/couleurs) de la main finale
      */
     public List<Card> getCompleteHand() {
         List<Card> finalHand = new ArrayList<>();
@@ -76,6 +77,11 @@ public class Hand implements Consumer<String> {
         return finalHand;
     }
 
+    /**
+     * Encode la main finale en un tableau de 5 entiers
+     * @param finalHand : main finale
+     * @return : tableau de 5 entiers représentant la main finale
+     */
     public static int[] encodeCompleteHand(List<Card> finalHand) {
         int[] encodedHand = new int[finalHand.size()];
         for (int i = 0; i < finalHand.size(); i++) {
@@ -89,9 +95,12 @@ public class Hand implements Consumer<String> {
      * @param finalHand : main finale
      * @return : tableau de 5 entiers représentant la meilleure main
      */
-    public int[] findBestHandInRange(List<Card> finalHand) {
+    public static int[] findBestHandInRange(List<Card> finalHand, Boolean isAi) {
         int[] bestHand = new int[5];
         int[] encodedFinalHand = encodeCompleteHand(finalHand);
+        if (!isAi) {
+            isAi = false;
+        }
 
         // initialise le rang de la meilleure main à 7463 (pire main possible)
         int bestRank = 7463;
@@ -123,7 +132,32 @@ public class Hand implements Consumer<String> {
             }
         }
 
+        if (isAi) {
+            int[] bestHandAndRank = new int[6];
+            System.arraycopy(bestHand, 0, bestHandAndRank, 0, 5);
+            bestHandAndRank[5] = bestRank;
+            return bestHandAndRank;
+        }
+
         return bestHand;
+    }
+
+    /**
+     * Methode pour générer une main aléatoire utile pour l'IA
+     * @return : tableau de 5 entiers représentant une main aléatoire
+     */
+    public static int[] randomHand() {
+        int[] randomHand = new int[5];
+        Deck simulatedDeck = new Deck();
+        simulatedDeck.shuffle();
+
+        for (int i = 0; i < 5; i++) {
+            randomHand[i] = Card.encodeTo32bitsInt(simulatedDeck.draw());
+            System.out.println("Random Hand: " + Arrays.toString(randomHand));
+        }
+
+        simulatedDeck.destroyInstance();
+        return randomHand;
     }
 
     /**

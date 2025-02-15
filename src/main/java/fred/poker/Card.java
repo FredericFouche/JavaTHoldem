@@ -91,34 +91,37 @@ public class Card {
      * @return int : entier représentant la carte
      */
     public static int encodeTo32bitsInt(Card c) {
-        int suitVal;
+        int suitMask;
         switch (c.getCardSuit()) {
             case "CLUBS":
-                suitVal = 0;
+                suitMask = 0x8000;
                 break;
             case "DIAMONDS":
-                suitVal = 1;
+                suitMask = 0x4000;
                 break;
             case "HEARTS":
-                suitVal = 2;
+                suitMask = 0x2000;
                 break;
             case "SPADES":
-                suitVal = 3;
+                suitMask = 0x1000;
                 break;
             default:
                 throw new IllegalArgumentException("Invalid card Suit");
         }
 
-        
-        int rankVal = c.getCardValue();
-        int primeCard = PRIMES[rankVal];
-        int rankBit = 1 << (16 + rankVal);
 
+        int rankVal = c.getCardValue();
+        int rankBit = 1 << (16 + rankVal);
+        int primeCard = PRIMES[rankVal];
+        int rankNibble = (rankVal << 8);
+
+        System.out.printf("   suitNibble=%04X, rankBits=%04X, primeValue=%02X\n",
+                rankNibble << 12, rankVal << 8, primeCard);
         // Magie noire qui permet de construire un entier à partir des valeurs de la carte
         // Bits 0-7 : prime de la carte
         // Bits 8-11 : rank de la carte
         // Bits 12-15 : suit de la carte
         // Bits 16-rank = 1
-        return rankBit | primeCard | (rankVal << 8) | (suitVal << 12);
+        return rankBit | primeCard | (rankVal << 8) | (rankNibble << 12);
     }
 }

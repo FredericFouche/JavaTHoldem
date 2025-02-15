@@ -62,4 +62,8 @@ public class Deck {
         Collections.shuffle(deck);
     }
 
+    public void destroyInstance() {
+        deck.clear();
+    }
+
 }

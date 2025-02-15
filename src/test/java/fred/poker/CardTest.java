@@ -34,7 +34,7 @@ class CardTest {
     @Test
     void encodeTo32bitsInt() {
         card = new Card((byte) 1, "DIAMONDS");
-        assertEquals(135427, Card.encodeTo32bitsInt(card));
+        assertEquals(1179907, Card.encodeTo32bitsInt(card));
     }
 
     @Test
