@@ -9,9 +9,11 @@ import java.util.function.Consumer;
  */
 public class Player implements Consumer<EventManager.EventType> {
     private String name;
-    private boolean isAi;
-    private final Hand hand;
     private EventManager eventManager;
+    private boolean isAi;
+
+    private final Hand hand;
+
     private enum playerEventEmitter {
         CALL,
         RAISE,
@@ -43,10 +45,6 @@ public class Player implements Consumer<EventManager.EventType> {
         if (eventType == EventManager.EventType.DEAL_CARDS) {
             handleDealCards();
         }
-    }
-
-    public void emitEvent(EventManager.EventType eventType) {
-        eventManager.notifySubscribers(eventType);
     }
 
     // --- GETTERS & SETTERS ---
@@ -182,5 +180,10 @@ public class Player implements Consumer<EventManager.EventType> {
     // --- Double to Percent(Int) conversion ---
     public static int doubleToPercent(double d) {
         return (int) (d * 100);
+    }
+
+    public static String rndPlayerName() {
+        String[] names = {"Jaine", "Ailice", "Chairlie", "Daivid", "Aive", "Fraink", "Graice", "Haink", "Jaick", "Kaite", "Liam", "Mia", "Noaih", "Olivia", "Quainn", "Ryain", "Saira", "Umai"};
+        return names[(int) (Math.random() * names.length)];
     }
 }

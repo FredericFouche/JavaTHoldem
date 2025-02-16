@@ -11,29 +11,34 @@ public class Game {
 
 
     public Game(int numberOfPlayers) {
-        // Ce deck est partagé par tous les joueurs et la table
+        // Il faut un deck pour la partie
         Deck deck = new Deck();
         deck.shuffle();
 
-        // On crée une liste de joueurs
+        // On crée une liste de joueurs vide pour y ajouter plus tard les joueurs
         this.players = new ArrayList<>();
 
-        // On crée une table
+        // On crée une table qui sert à centraliser les cartes communes
         this.table = new Table(deck, eventManager);
 
+        // On vérifie que le nombre de joueurs est entre 2 et 8
         int MAX_PLAYERS = 8;
         int MIN_PLAYERS = 2;
         if (numberOfPlayers < MIN_PLAYERS || numberOfPlayers > MAX_PLAYERS) {
             throw new IllegalArgumentException("Number of players must be between 2 and 8.");
         } else {
             for (int i = 0; i < numberOfPlayers; i++) {
+                // On crée une main pour chaque joueur
                 Hand hand = new Hand(deck);
+                // On crée un joueur avec sa main, le premier joueur est toujours humain
                 Player player;
                 if (i == 0) {
                     player = new Player("Player 1", false, hand, eventManager);
                 } else {
-                    player = new Player("Player 2", true, hand, eventManager);
+                    String strAiName = Player.rndPlayerName();
+                    player = new Player(strAiName, true, hand, eventManager);
                 }
+                System.out.println("Player " + player.getName() + " created");
                 players.add(player);
             }
         }

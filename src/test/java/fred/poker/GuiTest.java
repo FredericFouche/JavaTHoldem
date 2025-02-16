@@ -17,4 +17,5 @@ class GuiTest {
         Gui gui = new Gui();
         gui.generateCard(card);
     }
+
 }

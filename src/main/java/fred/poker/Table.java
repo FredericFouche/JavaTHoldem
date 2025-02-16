@@ -13,6 +13,7 @@ public class Table implements Consumer<EventManager.EventType> {
         DEAL_RIVER,
         END_GAME
     }
+
     public Table(Deck deck, EventManager eventManager) {
         communityCards = new ArrayList<>();
         Table.deck = deck;
