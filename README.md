@@ -66,7 +66,7 @@ This integer is composed of 4 bit ranges to store attributes :
 - [x] Write tests for the classes
 - [x] Clean up codebas
 - [x] Refactor the code
-- [ ] Comment code with Javadoc
+- [x] Comment code with Javadoc
 - [ ] Game interface
 - [ ] Game logic
 - [ ] Implement the AI
