@@ -113,4 +113,10 @@ public class Card {
         // Bits 16-rank = 1
         return rankBit | primeCard | (rankVal << 8) | (rankNibble << 12);
     }
+
+    public static Card decodeCard(int card) {
+        int rank = (card >> 8) & 0xF;
+        int suit = (card >> 12) & 0xF;
+        return new Card(rank, SUITS[suit]);
+    }
 }

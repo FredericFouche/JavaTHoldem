@@ -1,6 +1,8 @@
 package fred.poker;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Gui {
@@ -10,7 +12,7 @@ public class Gui {
         // Constructeur de la classe
     }
 
-    public void generateCard(Card card) {
+    public List<String> getCardLines(Card card) {
         int cardValue = card.getCardValue();
         String cardSuit = card.getCardSuit();
         String cardSuitSymbol = "";
@@ -30,20 +32,18 @@ public class Gui {
                 break;
         }
 
+        List<String> lines = new ArrayList<>();
+        lines.add("╭─────────╮");
+        lines.add(String.format("│%s        │", cardValue));
+        lines.add("│         │");
+        lines.add(String.format("│    %s    │", cardSuitSymbol));
+        lines.add("│         │");
+        lines.add(String.format("│        %s│", cardValue));
+        lines.add("╰─────────╯");
 
-        String template =
-                "╭─────────╮\n"
-                        + "│%d        │\n"
-                        + "│         │\n"
-                        + "│    %s    │\n"
-                        + "│         │\n"
-                        + "│        %d│\n"
-                        + "╰─────────╯";
-
-        String cardFormatted = String.format(template, cardValue, cardSuitSymbol, cardValue);
-        System.out.println(cardFormatted);
-
+        return lines;
     }
+
 
     public String playerTurnInput() {
         Scanner scanner = new Scanner(System.in);
@@ -83,5 +83,24 @@ public class Gui {
             return gameOptionsMenu();
         }
     }
+
+    public void displayHand(Hand hand) {
+        List<Card> playerCards = hand.getPlayerHand();
+        List<List<String>> cardsLines = new ArrayList<>();
+
+        for (Card card : playerCards) {
+            cardsLines.add(getCardLines(card));
+        }
+
+        int cardHeight = 7;
+
+        for (int line = 0; line < cardHeight; line++) {
+            for (List<String> cardLines : cardsLines) {
+                System.out.print(cardLines.get(line) + "   ");
+            }
+            System.out.println();
+        }
+    }
+
 
 }
