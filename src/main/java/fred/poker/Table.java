@@ -36,7 +36,7 @@ public class Table implements Consumer<EventManager.EventType> {
         }
     }
 
-    public List<Card> getCommunityCards() {
+    public static List<Card> getCommunityCards() {
         return communityCards;
     }
 

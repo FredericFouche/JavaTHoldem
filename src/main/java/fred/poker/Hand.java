@@ -9,27 +9,29 @@ public class Hand implements Consumer<String> {
      */
     private final List<Card> hand;
 
-
-    /**
-     * Le deck de cartes de la partie
-     */
-    private final Deck deck;
-
-    /**
-     * La table de la partie
-     */
-    private final Table table;
-
     /**
      * Constructeur de la classe Hand
      * Crée une main vide
      * @param deck : le deck de cartes de la partie
-     * @param table : la table de la partie
      */
-    public Hand(Deck deck, Table table) {
+    public Hand(Deck deck) {
         this.hand = new ArrayList<>();
-        this.deck = deck;
-        this.table = table;
+    }
+
+    /**
+     * Methode pour gérer l'abonnement à l'evennement DEAL_CARDS
+     * @param s : l'event
+     */
+    @Override
+    public void accept(String s) {
+        if (s.equals("DEAL_CARDS")) {
+            clearPlayerHand();
+            addCardToPlayerHand(Table.deck.draw());
+            addCardToPlayerHand(Table.deck.draw());
+        }
+    }
+
+    public static void setCards(Card draw) {
     }
 
     /**
@@ -43,13 +45,11 @@ public class Hand implements Consumer<String> {
     /**
      * Ajoute une carte tiré du deck à la main du joueur
      */
-    public void drawCardPlayerHand(byte number) {
-        if (hand.size() + number <= 2) {
-            for (int i = 0; i < number; i++) {
-                hand.add(deck.draw());
-            }
+    public void addCardToPlayerHand(Card card) {
+        if (hand.size() < 2) {
+            hand.add(card);
         } else {
-            throw new IllegalArgumentException("Hand is limited to 2 cards.");
+            throw new IllegalArgumentException("Player hand can contain only 2 cards.");
         }
     }
 
@@ -70,7 +70,7 @@ public class Hand implements Consumer<String> {
     public List<Card> getCompleteHand() {
         List<Card> finalHand = new ArrayList<>();
         finalHand.addAll(getPlayerHand());
-        finalHand.addAll(table.getCommunityCards());
+        finalHand.addAll(Table.getCommunityCards());
         return finalHand;
     }
 
@@ -149,17 +149,6 @@ public class Hand implements Consumer<String> {
             randomHand[i] = Card.encodeTo32bitsInt(actualDeck.draw());
         }
         return randomHand;
-    }
-
-    /**
-     * Methode pour gérer l'abonnement à l'evennement DEAL_CARDS
-     * @param s : l'event
-     */
-    @Override
-    public void accept(String s) {
-        if (s.equals("DEAL_CARDS")) {
-            drawCardPlayerHand((byte) 2);
-        }
     }
 
     public void setHoleCards(List<Card> holeCards) {

@@ -11,7 +11,7 @@ class EvaluatorTest {
     void setUp() {
         Table table = new Table(new Deck(), new EventManager());
         Deck deck = new Deck();
-        Hand hand = new Hand(deck, table);
+        Hand hand = new Hand(deck);
         Evaluator evaluator = new Evaluator();
         Lookup lookup = Lookup.getInstance();
     }

@@ -29,6 +29,7 @@ public class Deck {
 
     /**
      * Tire une carte du deck et la renvoie
+     *
      * @return int
      */
     public Card draw() {

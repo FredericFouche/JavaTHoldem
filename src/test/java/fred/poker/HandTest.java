@@ -6,17 +6,25 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static fred.poker.Table.deck;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HandTest {
     Hand hand;
-
+    Card card1;
+    Card card2;
+    Card card3;
+    Table table;
 
     @BeforeEach
     void setUp() {
         Deck deck = new Deck();
-        Table table = new Table(deck, new EventManager());
-        hand = new Hand(deck, table);
+        hand = new Hand(deck);
+        table = new Table(deck, new EventManager());
+
+        this.card1 = deck.draw();
+        this.card2 = deck.draw();
+        this.card3 = deck.draw();
     }
 
     @Test
@@ -26,20 +34,23 @@ class HandTest {
     }
 
     @Test
-    void drawCardPlayerHand() {
-        hand.drawCardPlayerHand((byte) 2);
+    void addCardToPlayerHand() {
+        hand.addCardToPlayerHand(card1);
+        hand.addCardToPlayerHand(card2);
         assertEquals(2, hand.getPlayerHand().size());
     }
 
     @Test
-    void drawCardPlayerHandIllegal() {
-        hand.drawCardPlayerHand((byte) 2);
-        assertThrows(IllegalArgumentException.class, () -> hand.drawCardPlayerHand((byte) 1));
+    void addCardToPlayerHandIllegal() {
+        hand.addCardToPlayerHand(card1);
+        hand.addCardToPlayerHand(card2);
+        assertThrows(IllegalArgumentException.class, () -> hand.addCardToPlayerHand(card3));
     }
 
     @Test
     void clearPlayerHand() {
-        hand.drawCardPlayerHand((byte) 2);
+        hand.addCardToPlayerHand(card1);
+        hand.addCardToPlayerHand(card2);
         hand.clearPlayerHand();
         assertEquals(0, hand.getPlayerHand().size());
     }
@@ -52,7 +63,8 @@ class HandTest {
 
     @Test
     void getCompleteHandWithHoleCardsOnly() {
-        hand.drawCardPlayerHand((byte) 2);
+        hand.addCardToPlayerHand(card1);
+        hand.addCardToPlayerHand(card2);
         List<Card> finalHand = hand.getCompleteHand();
         assertEquals(2, finalHand.size());
     }
@@ -68,7 +80,8 @@ class HandTest {
 
     @Test
     void getCompleteHandWithHoleAndCommunityCards() {
-        hand.drawCardPlayerHand((byte) 2);
+        hand.addCardToPlayerHand(card1);
+        hand.addCardToPlayerHand(card2);
         Table.dealFlop();
         Table.dealTurn();
         Table.dealRiver();
@@ -85,7 +98,8 @@ class HandTest {
 
     @Test
     void encodeCompleteHandWithHoleAndCommunityCards() {
-        hand.drawCardPlayerHand((byte) 2);
+        hand.addCardToPlayerHand(card1);
+        hand.addCardToPlayerHand(card2);
         Table.dealFlop();
         Table.dealTurn();
         Table.dealRiver();
@@ -98,8 +112,8 @@ class HandTest {
     void findBestHandInRange() {
         Lookup.getInstance();
 
-        // Construire le jeu de test
-        hand.drawCardPlayerHand((byte) 2);
+        hand.addCardToPlayerHand(card1);
+        hand.addCardToPlayerHand(card2);
         Table.dealFlop();
         Table.dealTurn();
         Table.dealRiver();
@@ -112,7 +126,6 @@ class HandTest {
 
     @Test
     void randomHand() {
-        Deck deck = new Deck();
         int[] res = Hand.randomHand(deck);
         assertNotNull(res);
         assertEquals(5, res.length);

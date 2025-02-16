@@ -28,10 +28,6 @@ public class Card {
         setCardSuit(cardSuit);
     }
 
-    /*
-     * Getters
-     */
-
     public int getCardValue() {
         return cardValue;
     }
@@ -43,10 +39,6 @@ public class Card {
     public Card getCard() {
         return this;
     }
-
-    /*
-     * Setters
-     */
 
     /**
      * Setter pour la valeur de la carte

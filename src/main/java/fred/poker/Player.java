@@ -97,7 +97,8 @@ public class Player implements Consumer<EventManager.EventType> {
      * Gère le tirage des cartes.
      */
     public void handleDealCards() {
-        hand.drawCardPlayerHand((byte) 2);
+        hand.addCardToPlayerHand(Table.deck.draw());
+        hand.addCardToPlayerHand(Table.deck.draw());
     }
 
     /*

@@ -11,10 +11,14 @@ public class Game {
 
 
     public Game(int numberOfPlayers) {
+        // Ce deck est partagé par tous les joueurs et la table
         Deck deck = new Deck();
         deck.shuffle();
+
+        // On crée une liste de joueurs
         this.players = new ArrayList<>();
 
+        // On crée une table
         this.table = new Table(deck, eventManager);
 
         int MAX_PLAYERS = 8;
@@ -23,7 +27,7 @@ public class Game {
             throw new IllegalArgumentException("Number of players must be between 2 and 8.");
         } else {
             for (int i = 0; i < numberOfPlayers; i++) {
-                Hand hand = new Hand(deck, table);
+                Hand hand = new Hand(deck);
                 Player player;
                 if (i == 0) {
                     player = new Player("Player 1", false, hand, eventManager);

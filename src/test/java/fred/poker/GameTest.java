@@ -42,14 +42,14 @@ class GameTest {
     @Test
     void dealFlop() {
         game.dealFlop();
-        assertEquals(3, game.getTable().getCommunityCards().size(), "Le flop doit contenir 3 cartes.");
+        assertEquals(3, Table.getCommunityCards().size(), "Le flop doit contenir 3 cartes.");
     }
 
     @Test
     void dealTurn() {
         game.dealFlop();
         game.dealTurn();
-        assertEquals(4, game.getTable().getCommunityCards().size(), "Le turn doit contenir 4 cartes.");
+        assertEquals(4, Table.getCommunityCards().size(), "Le turn doit contenir 4 cartes.");
     }
 
     @Test
@@ -57,12 +57,12 @@ class GameTest {
         game.dealFlop();
         game.dealTurn();
         game.dealRiver();
-        assertEquals(5, game.getTable().getCommunityCards().size(), "Le river doit contenir 5 cartes.");
+        assertEquals(5, Table.getCommunityCards().size(), "Le river doit contenir 5 cartes.");
     }
 
     @Test
     void endGame() {
         game.endGame();
-        assertEquals(0, game.getTable().getCommunityCards().size(), "La table doit être vide.");
+        assertEquals(0, Table.getCommunityCards().size(), "La table doit être vide.");
     }
 }

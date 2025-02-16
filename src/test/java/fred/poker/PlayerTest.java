@@ -48,7 +48,7 @@ class PlayerTest {
             holeCards.add(deck.draw());
             holeCards.add(deck.draw());
 
-            Hand hand = new Hand(deck, table);
+            Hand hand = new Hand(deck);
             hand.setHoleCards(holeCards);
 
             Player player = new Player("Player 1", true, hand, eventManager);
